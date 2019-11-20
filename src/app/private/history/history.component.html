@@ -1,0 +1,12 @@
+<div>
+  <div *ngFor="let note of notes">
+    <span>{{note.owner | person}}</span>
+    <span>{{note.amount}}</span>
+    <span>{{note.description}}</span>
+    <div *ngFor="let moneyPerPerson of note.moneyPerPerson">
+      {{moneyPerPerson.personId}}
+      -
+      {{moneyPerPerson.money}}
+    </div>
+  </div>
+</div>

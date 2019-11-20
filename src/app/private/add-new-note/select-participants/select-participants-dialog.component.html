@@ -1,0 +1,15 @@
+<mat-toolbar color="primary" class="nav-bar">
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <span>Выбор участников</span>
+</mat-toolbar>
+<div mat-dialog-content class="content">
+  <div *ngFor="let person of data.persons" class="person-to-select">
+    <mat-checkbox (change)="person.selected = $event.checked">{{person.first_name}}</mat-checkbox>
+  </div>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-raised-button (click)="submit()">Выбрать</button>
+  <button mat-raised-button color="primary" (click)="submitAll()">Выбрать всех</button>
+</div>

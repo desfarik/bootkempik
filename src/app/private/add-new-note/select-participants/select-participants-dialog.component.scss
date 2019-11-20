@@ -1,0 +1,35 @@
+.title {
+  margin: 0;
+  font-weight: 500;
+}
+
+.content {
+  padding: 24px 0;
+
+}
+
+.person-to-select {
+  height: 50px;
+  line-height: 50px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0 16px;
+  &:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  ::ng-deep {
+    .mat-checkbox, .mat-checkbox-layout {
+      width: 100%;
+    }
+
+    .mat-checkbox-inner-container {
+      margin-left: 0;
+    }
+  }
+}
+
+.actions {
+  button {
+    margin: 0 12px 12px;
+  }
+}
