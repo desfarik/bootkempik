@@ -26,7 +26,7 @@ export class AddNewNoteComponent implements OnInit {
 
   public async ngOnInit() {
     this.addNewNoteForm = this.formBuilder.group({
-      'amount': [null, Validators.required],
+      'amount': [null, [Validators.required, Validators.max(999), Validators.min(1)]],
       'description': [null, Validators.required],
       'date': [new Date(), Validators.required],
       'persons': [[], Validators.required],
@@ -71,9 +71,13 @@ export class AddNewNoteComponent implements OnInit {
   public submit() {
     if (this.addNewNoteForm.valid) {
       const newNote = new Note(this.addNewNoteForm.value.date.getTime(), this.addNewNoteForm.value.amount, this.me, this.addNewNoteForm.value.description, this.getMoneyPerPerson());
-      this.fireBaseService.addNewNote(newNote);
-      this.router.navigateByUrl('');
+      this.fireBaseService.balanceService.addNewNote(newNote);
+      this.moveToMainPage();
     }
+  }
+
+  public moveToMainPage() {
+    history.back();
   }
 
   private getMoneyPerPerson(): MoneyPerPerson[] {

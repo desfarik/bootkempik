@@ -10,6 +10,7 @@ export class SelectParticipantsDialog implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<SelectParticipantsDialog>,) {
+    this.data.persons.forEach(person => person.selected = false);
   }
 
   ngOnInit() {
@@ -18,6 +19,7 @@ export class SelectParticipantsDialog implements OnInit {
   public submit() {
     this.dialogRef.close(this.data.persons.filter(person => person.selected));
   }
+
   public submitAll() {
     this.dialogRef.close(this.data.persons);
   }

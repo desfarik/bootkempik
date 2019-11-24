@@ -8,6 +8,7 @@ import {User} from "./model/user";
 export class AuthorizationService {
 
   private USER = 'user';
+  private USER_ID = 'user_id';
   private VK_TOKEN = 'vk_token';
 
   public logout(): void {
@@ -31,20 +32,16 @@ export class AuthorizationService {
     return JSON.parse(localStorage.getItem('user'));
   }
 
-  public saveVkToken(token): void {
-    localStorage.setItem('vk_token', token);
+  public saveVkTokenAndId(token, userId): void {
+    localStorage.setItem(this.VK_TOKEN, token);
+    localStorage.setItem(this.USER_ID, userId);
   }
 
   public static getVkToken(): string {
     return localStorage.getItem('vk_token')
   }
 
-  public static getUserId(withPrefix: boolean = true): string {
-    const userId = localStorage.getItem('userId');
-    if (withPrefix) {
-      return userId;
-    } else {
-      return userId && userId.split('_')[1];
-    }
+  public getUserId(): string {
+    return localStorage.getItem(this.USER_ID);
   }
 }

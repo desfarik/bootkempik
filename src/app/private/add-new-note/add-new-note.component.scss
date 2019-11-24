@@ -52,11 +52,14 @@
   }
 }
 
-.amount-container ::ng-deep {
-  .mat-form-field-suffix {
-    position: relative;
-    top: -4px;
-    right: 5px;
+.amount-container {
+  margin-bottom: 5px;
+  ::ng-deep {
+    .mat-form-field-suffix {
+      position: relative;
+      top: -4px;
+      right: 5px;
+    }
   }
 }
 

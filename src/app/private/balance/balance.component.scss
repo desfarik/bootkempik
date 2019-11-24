@@ -1,0 +1,9 @@
+::ng-deep {
+  .canvasjs-chart-credit {
+    display: none;
+  }
+  .canvasjs-chart-canvas {
+    width: 100vw !important;
+    height: 350px !important;
+  }
+}

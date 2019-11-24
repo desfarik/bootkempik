@@ -11,11 +11,11 @@ export class HistoryComponent implements OnInit {
 
   public notes: Note[];
 
-  constructor(private firabeseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService) {
   }
 
   public async ngOnInit() {
-    this.notes = await this.firabeseService.getAllNotes();
+    this.notes = await this.firebaseService.getAllNotes();
     console.log(this.notes);
   }
 

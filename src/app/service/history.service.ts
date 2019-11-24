@@ -1,11 +1,11 @@
 import {User} from "./model/user";
 import firebase from "../../../node_modules/firebase";
 
-export class UserService  {
+export class HistoryService {
 
   private allUsers: Map<number, User> = new Map();
 
-  constructor(private database: firebase.database.Database, private functions: firebase.functions.Functions) {
+  constructor(private database: firebase.database.Database, protected functions: firebase.functions.Functions) {
     this.loadAllUsers();
   }
 
@@ -42,7 +42,7 @@ export class UserService  {
     return Array.from(this.allUsers.values())
   }
 
-  public async getUser(userId:string):Promise<User> {
+  public async getUser(userId: string): Promise<User> {
     if (this.allUsers.size === 0) {
       await this.loadAllUsers();
     }

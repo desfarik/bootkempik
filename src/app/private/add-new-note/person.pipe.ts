@@ -12,7 +12,7 @@ export class PersonPipe implements PipeTransform {
     this.me = authService.getCurrentUser();
   }
 
-  transform(value: User, me: User): any {
+  transform(value: User, me?: User): any {
     if (value.id === this.me.id) {
       return 'Я';
     }
