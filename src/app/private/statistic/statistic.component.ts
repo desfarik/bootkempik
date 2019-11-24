@@ -24,7 +24,7 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
   public allUsers: User[];
   public me: User;
   public chart: any;
-  public ownBalance: number;
+  public commonCredit: number;
   private chartData = {
     datasets: [{
       data: [],//chartData.map(data => data.value),
@@ -79,7 +79,7 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.isActive) {
       return;
     }
-    this.ownBalance = this.chartData.datasets[0].data.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+    this.commonCredit = this.chartData.datasets[0].data.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
     if (this.chart) {
       this.chart.update();
       return;
@@ -99,8 +99,11 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
           // Change options for ALL labels of THIS CHART
           datalabels: {
             color: '#ffffff',
-            fontSize: 14,
-            fontFamily: "Roboto",
+            font: {
+              size: 14,
+              weight: 500,
+              family: "Roboto",
+            },
             formatter: function (value, context) {
               return context.chart.data.labels[context.dataIndex] + " " + value;
             }

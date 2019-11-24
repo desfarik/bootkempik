@@ -1,3 +1,22 @@
-<div>
+<div class="scrollable-tab-area">
+  <div class="reduce-container">
+    <div class="select-container" [formGroup]="formGroup">
+      <mat-select [disableOptionCentering]="true" [(value)]="selectedPerson" (selectionChange)="onChangePerson()">
+        <mat-option *ngFor="let person of persons" [value]="person">
+          {{person}}
+        </mat-option>
+      </mat-select>
+      <input matInput type="number" autocomplete="off" formControlName="amount" [max]="999" [min]="0">
+      <!--<mat-error *ngIf="formGroup.controls.amount.hasError('min') || amountControl.hasError('max')">-->
+        <!--Размер суммы должен быть между 1 и 999 рублей-->
+      <!--</mat-error>-->
+    </div>
+
+    <button mat-raised-button color="primary" type="button" (click)="reduce()">Списать</button>
+
+  </div>
   <canvas id="myChart" style="height: 350px; width: 100vw;"></canvas>
+  <div class="common-write-off-container">
+    <button mat-raised-button color="primary" type="button">Взаимное списание</button>
+  </div>
 </div>

@@ -1,9 +1,38 @@
-::ng-deep {
-  .canvasjs-chart-credit {
-    display: none;
+
+.reduce-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 16px;
+  align-items: center;
+  border-color: rgba(0, 0, 0, .12);
+
+  .select-container {
+    display: flex;
+    border: 1px solid;
+    border-radius: 5px;
+    border-color: inherit;
   }
-  .canvasjs-chart-canvas {
-    width: 100vw !important;
-    height: 350px !important;
+  button {
+    height: 38px;
   }
+
+  .mat-select {
+    max-width: 80px;
+    min-width: 80px;
+    border-right: 1px solid;
+    border-color: inherit;
+    padding: 8px;
+  }
+
+  input {
+    padding-left: 8px;
+    max-width: 80px;
+    min-width: 80px;
+  }
+}
+.common-write-off-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }

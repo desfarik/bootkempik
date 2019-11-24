@@ -3,8 +3,10 @@ import {FirebaseService} from "../../service/firebase.service";
 import {AuthorizationService} from "../../service/authorization.service";
 import {AllBalance, Balance} from "./balance";
 import {User} from "../../service/model/user";
-import Chart from './../../../assets/chartjs.min';
 import {Subscription} from "rxjs";
+import {Chart} from "chart.js";
+import * as ChartLabelPlugin from "chartjs-plugin-datalabels";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-balance',
@@ -19,6 +21,13 @@ export class BalanceComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public isActive: boolean;
 
+  public persons: string[] = [];
+  public selectedPerson: string;
+
+  public formGroup = new FormGroup({
+    'amount': new FormControl([null, [Validators.required, Validators.max(999), Validators.min(1)]])
+  });
+
   public myBalance: Balance;
   public myUserId: string;
   public me: User;
@@ -28,11 +37,20 @@ export class BalanceComponent implements OnInit, OnChanges, OnDestroy {
     datasets: [{
       label: 'Я должен',
       data: [],//chartData.map(data => data.negative),
-      backgroundColor: Array(10).fill('rgb(255, 99, 132)')
+      backgroundColor: Array(10).fill('rgb(255, 99, 132)'),
+      datalabels: {
+        align: 'center',
+        anchor: 'center',
+        offset: 10,
+      }
     }, {
       label: 'Мне должен',
       data: [],//chartData.map(data => data.positive),
-      backgroundColor: Array(10).fill('rgb(54, 162, 235)')
+      backgroundColor: Array(10).fill('rgb(54, 162, 235)'),
+      datalabels: {
+        anchor: 'center',
+        clamp: true
+      }
     }]
   };
   private subscription: Subscription;
@@ -68,6 +86,14 @@ export class BalanceComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  public onChangePerson() {
+    this.formGroup.controls.amount.setValue(this.chartData.datasets[0].data[this.persons.findIndex(name => this.selectedPerson === name)]);
+  }
+
+  public reduce() {
+    console.log(this.formGroup);
+  }
+
   private prepareChartData() {
     const tempChartData = {};
     if (this.myBalance.positive) {
@@ -101,10 +127,14 @@ export class BalanceComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.isActive) {
       return;
     }
+    this.persons = this.chartData.labels;
+    this.selectedPerson = this.persons[0];
+    this.formGroup.controls.amount.setValue(this.chartData.datasets[0].data[this.persons.findIndex(name => this.selectedPerson === name)]);
     if (this.chart) {
       this.chart.update();
       return;
     }
+    // @ts-ignore
     this.chart = new Chart(document.getElementById('myChart'), {
       type: 'bar',
       data: this.chartData,
@@ -121,8 +151,21 @@ export class BalanceComponent implements OnInit, OnChanges, OnDestroy {
               beginAtZero: true,
             }
           }]
+        },
+        plugins: {
+          // Change options for ALL labels of THIS CHART
+          datalabels: {
+            color: '#ffffff',
+            font: {
+              size: 14,
+              weight: 500,
+              family: "Roboto",
+            },
+            anchor: 'center',
+          },
         }
-      }
+      },
+      plugins: [ChartLabelPlugin]
     });
   }
 

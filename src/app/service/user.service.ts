@@ -1,7 +1,7 @@
 import {User} from "./model/user";
 import firebase from "../../../node_modules/firebase";
 
-export class UserService  {
+export class UserService {
 
   private allUsers: Map<number, User> = new Map();
 
@@ -42,11 +42,19 @@ export class UserService  {
     return Array.from(this.allUsers.values())
   }
 
-  public async getUser(userId:string):Promise<User> {
+  public async getUser(userId: string): Promise<User> {
     if (this.allUsers.size === 0) {
       await this.loadAllUsers();
     }
     return this.allUsers.get(parseInt(userId));
+  }
+
+  public async getUserByName(userName: string): Promise<User> {
+    if (this.allUsers.size === 0) {
+      await this.loadAllUsers();
+    }
+    // @ts-ignore
+    return Array.from(this.allUsers.values()).find((user: User) => user.first_name === userName);
   }
 
   public getUserName(userId: string): string {

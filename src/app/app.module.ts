@@ -25,6 +25,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { MoneyPerPersonPipe } from './private/add-new-note/money-per-person.pipe';
 import { PersonPipe } from './private/add-new-note/person.pipe';
 import { SelectParticipantsDialog } from './private/add-new-note/select-participants/select-participants-dialog.component';
+import { DatePipe } from './private/history/date.pipe';
 
 const APP_DATE_FORMATS = {
   parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -45,7 +46,8 @@ const APP_DATE_FORMATS = {
     AddNewNoteComponent,
     MoneyPerPersonPipe,
     PersonPipe,
-    SelectParticipantsDialog
+    SelectParticipantsDialog,
+    DatePipe
   ],
   imports: [
     MatButtonModule,

@@ -6,14 +6,14 @@ import {AuthorizationService} from "../../service/authorization.service";
   name: 'person'
 })
 export class PersonPipe implements PipeTransform {
-  public me: User;
+  public meId: number;
 
   constructor(private authService: AuthorizationService) {
-    this.me = authService.getCurrentUser();
+    this.meId = parseInt(authService.getUserId());
   }
 
   transform(value: User, me?: User): any {
-    if (value.id === this.me.id) {
+    if (parseInt(value.id) === this.meId) {
       return 'Я';
     }
     return value.first_name;
