@@ -63,6 +63,9 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private prepareChartData() {
+    if(!this.allUsers) {
+      return;
+    }
     const tempChartData = [];
     this.allUsers.forEach(user => {
       if (this.allBalances[user.id] && this.allBalances[user.id].negative) {

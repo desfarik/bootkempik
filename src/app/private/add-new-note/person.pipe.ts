@@ -13,6 +13,9 @@ export class PersonPipe implements PipeTransform {
   }
 
   transform(value: User, me?: User): any {
+    if(!value) {
+      return '';
+    }
     if (parseInt(value.id) === this.meId) {
       return 'Я';
     }

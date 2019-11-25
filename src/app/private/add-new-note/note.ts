@@ -1,15 +1,23 @@
-import {User} from "../../service/model/user";
+import {User} from '../../service/model/user';
 
 export class Note {
-  public nowDate: number;
+    public nowDate: number;
 
-  constructor(public date: number, public amount: number, public owner: User, public description: string, public moneyPerPerson: MoneyPerPerson[]) {
-    this.nowDate = new Date().getTime();
-  }
+    constructor(public date: number, public amount: number, public owner: User, public description: string,
+                public moneyPerPerson: MoneyPerPerson[], public positive = false) {
+        this.nowDate = new Date().getTime();
+    }
 
 }
 
 export interface MoneyPerPerson {
-  money: number;
-  personId: number;
+    money: number;
+    personId: number;
+}
+
+export interface AllNotes {
+    // @ts-ignore
+    lastUpdateDate: number;
+
+    [id: string]: Note;
 }

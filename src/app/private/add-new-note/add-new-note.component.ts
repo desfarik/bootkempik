@@ -68,10 +68,11 @@ export class AddNewNoteComponent implements OnInit {
     ;
   }
 
-  public submit() {
+  public async submit() {
     if (this.addNewNoteForm.valid) {
       const newNote = new Note(this.addNewNoteForm.value.date.getTime(), this.addNewNoteForm.value.amount, this.me, this.addNewNoteForm.value.description, this.getMoneyPerPerson());
       this.fireBaseService.balanceService.addNewNote(newNote);
+      this.fireBaseService.historyService.addNewNote(newNote);
       this.moveToMainPage();
     }
   }

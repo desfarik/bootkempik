@@ -1,58 +1,54 @@
-import {User} from "./model/user";
-import firebase from "../../../node_modules/firebase";
+import firebase from '../../../node_modules/firebase';
+import {OfflineDatabase} from './firebase.service';
+import {AllNotes, Note} from '../private/add-new-note/note';
+import {BehaviorSubject} from 'rxjs';
+import {templateJitUrl} from '@angular/compiler';
 
 export class HistoryService {
 
-  private allUsers: Map<number, User> = new Map();
+    private allNotes: AllNotes;
+    public onAllNotesUpdate = new BehaviorSubject<AllNotes>(null);
+    private sendAllNotesUpdate = false;
 
-  constructor(private database: firebase.database.Database, protected functions: firebase.functions.Functions) {
-    this.loadAllUsers();
-  }
-
-  public saveUser(newUser: User): Promise<void> {
-    return this.database.ref(`users/${newUser.id}`).once('value')
-      .then(async (snapshot) => {
-        const user = snapshot.val();
-        if (!user) {
-          this.database.ref(`users/${newUser.id}`).set(newUser).then(() => {
-              this.loadAllUsers();
+    constructor(private database: firebase.database.Database, protected functions: firebase.functions.Functions,
+                private offlineDatabase: OfflineDatabase) {
+        this.offlineDatabase.getAllNotes().then(notes => {
+            this.allNotes = notes;
+            if (this.sendAllNotesUpdate) {
+                this.onAllNotesUpdate.next(this.allNotes);
             }
-          );
+        });
+    }
+
+    public async addNewNote(note: Note, toOnline = false) {
+        this.allNotes[new Date().getTime().toString()] = note;
+        await this.offlineDatabase.addNewNote(note);
+        this.onAllNotesUpdate.next(this.allNotes);
+        if (toOnline) {
+            await this.database.ref('/notes').push(note);
         }
-      });
-  }
-
-  private loadAllUsers(): Promise<void> {
-    return this.getForceAllUsers().then((allUsers) => {
-      allUsers.forEach(user => {
-        this.allUsers.set(parseInt(user.id), user);
-      })
-    })
-  }
-
-  private getForceAllUsers(): Promise<User[]> {
-    return this.database.ref('users').once('value')
-      .then(snapshot => Object.values(snapshot.val()) as User[])
-  }
-
-  public async getAllUsers(): Promise<User[]> {
-    if (this.allUsers.size === 0) {
-      await this.loadAllUsers();
     }
-    return Array.from(this.allUsers.values())
-  }
 
-  public async getUser(userId: string): Promise<User> {
-    if (this.allUsers.size === 0) {
-      await this.loadAllUsers();
+    public getAllNotes(): AllNotes {
+        setTimeout(() => this.loadAllNotes(this.onAllNotesUpdate), 2000);
+        this.sendAllNotesUpdate = !this.allNotes;
+        return this.allNotes;
     }
-    return this.allUsers.get(parseInt(userId));
-  }
 
-  public getUserName(userId: string): string {
-    const user = this.allUsers.get(parseInt(userId, 10));
-    return user && user.first_name;
-  }
+    private loadAllNotes(subject?: BehaviorSubject<AllNotes>): Promise<AllNotes> {
+        return this.database.ref('/notes').once('value').then(snapshot => {
+            const allNotes = snapshot.val() as AllNotes;
+            if (allNotes.lastUpdateDate > ((this.allNotes && this.allNotes.lastUpdateDate) || 0)) {
+                this.offlineDatabase.loadAllNotes(allNotes);
+                if (!!subject) {
+                    subject.next(allNotes);
+                }
+                return allNotes;
+            } else {
+                return this.allNotes;
+            }
+        });
+    }
 }
 
 
