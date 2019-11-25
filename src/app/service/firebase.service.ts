@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import * as firebase from 'firebase';
-import {UserService} from "./user.service";
-import {firebaseConfig} from "../../../firebase.config";
-import {Note} from "../private/add-new-note/note";
-import {AllBalance, Balance} from "../private/balance/balance";
-import {User} from "./model/user";
-import {HistoryService} from "./history.service";
-import {BalanceService} from "./balance/balance.service";
+import {Injectable} from '@angular/core';
+import { firebase } from '@firebase/app';
+import {UserService} from './user.service';
+import {firebaseConfig} from '../../../firebase.config';
+import '@firebase/database';
+import '@firebase/functions';
+import {Note} from '../private/add-new-note/note';
+import {HistoryService} from './history.service';
+import {BalanceService} from './balance/balance.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,7 @@ export class FirebaseService {
 
   constructor() {
     firebase.initializeApp(firebaseConfig);
+    // @ts-ignore
     this.database = firebase.database();
     this.functions = firebase.functions();
     this.userService = new UserService(this.database, this.functions);
