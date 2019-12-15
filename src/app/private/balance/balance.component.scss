@@ -16,6 +16,11 @@
   button {
     height: 38px;
   }
+  .mat-error {
+    position: absolute;
+    top: 64px;
+    font-size: 12px;
+  }
 
   .mat-select {
     max-width: 80px;
@@ -31,15 +36,14 @@
     min-width: 80px;
   }
 }
+
 .common-write-off-container {
   display: flex;
   justify-content: center;
   margin-top: 16px;
 }
 
-.error-container {
-  height: 16px;
-  padding: 0 16px;
-  position: relative;
-  top: -8px;
+.info {
+  padding: 18px 16px 0 16px;
+  margin: 0;
 }

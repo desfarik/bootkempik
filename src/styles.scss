@@ -46,3 +46,50 @@ body, html {
 mat-tab-body {
   min-height: calc(100vh - 104px)!important;
 }
+
+.loading {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 0;
+  top: 0;
+  z-index: 500;
+  .click-handler {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: black;
+    z-index: -1;
+    opacity: 0.15;
+  }
+  .mat-progress-spinner circle, .mat-spinner circle {
+    //stroke: #8bc34a;
+  }
+}
+
+.good {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  mat-icon {
+    font-size: 170px;
+    height: 170px;
+    width: 170px;
+    margin-top: -60px;
+    color: #7cb342;
+  }
+  text-align: center;
+  line-height: 24px;
+}
+

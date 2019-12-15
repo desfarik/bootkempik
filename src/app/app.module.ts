@@ -13,7 +13,7 @@ import {
   MatButtonModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDividerModule,
   MatIconModule,
   MatInputModule,
-  MatMenuModule, MatNativeDateModule, MatSelectModule,
+  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule,
   MatTabsModule,
   MatToolbarModule
 } from "@angular/material";
@@ -65,6 +65,8 @@ const APP_DATE_FORMATS = {
     MatChipsModule,
     MatCheckboxModule,
     BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
     RouterModule.forRoot(AppRoutes)
   ],
   exports: [

@@ -1,7 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {VkUserService} from "../../service/vk.user.service";
-import {User} from "../../service/model/user";
-import {FirebaseService} from "../../service/firebase.service";
 import {Router} from "@angular/router";
 import {AuthorizationService} from "../../service/authorization.service";
 

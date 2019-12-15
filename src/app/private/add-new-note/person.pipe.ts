@@ -13,13 +13,10 @@ export class PersonPipe implements PipeTransform {
   }
 
   transform(value: User, me?: User): any {
-    if(!value) {
-      return '';
-    }
-    if (parseInt(value.id) === this.meId) {
+    if (parseInt(value && value.id) === this.meId) {
       return 'Я';
     }
-    return value.first_name;
+    return value && value.first_name;
     // return value.first_name + " " + value.last_name;
   }
 

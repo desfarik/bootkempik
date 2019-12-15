@@ -1,55 +1,53 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FirebaseService} from '../../service/firebase.service';
-import {AllNotes, Note} from '../add-new-note/note';
-import {User} from '../../service/model/user';
-import {Subscription} from 'rxjs';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {FirebaseService} from "../../service/firebase.service";
+import {Note} from "../add-new-note/note";
+import {User} from "../../service/model/user";
 
 @Component({
-    selector: 'app-history',
-    templateUrl: './history.component.html',
-    styleUrls: ['./history.component.scss']
+  selector: 'app-history',
+  templateUrl: './history.component.html',
+  styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent implements OnInit, OnDestroy {
+export class HistoryComponent implements OnInit, OnChanges {
 
-    public notes: Note[];
-    private subscription: Subscription;
+  @Input()
+  public isActive: boolean;
+  public notes: Note[];
+  public loading = true;
 
-    public orderTypes = [
-        {value: (a, b) => b.date - a.date, viewValue: 'Сначала новые'},
-        {value: (a, b) => a.date - b.date, viewValue: 'Сначала старые'},
-    ];
-    public selectedOrder = this.orderTypes[0].value;
-    public allUsers: Map<number, User> = new Map();
 
-    constructor(private firebaseService: FirebaseService) {
+  public orderTypes = [
+    {value: (a, b) => b.date - a.date, viewValue: 'Сначала новые'},
+    {value: (a, b) => a.date - b.date, viewValue: 'Сначала старые'},
+  ];
+  public selectedOrder = this.orderTypes[0].value;
+  public allUsers: Map<number, User> = new Map();
+
+  constructor(private firebaseService: FirebaseService) {
+  }
+
+  public async ngOnInit() {
+    this.loading = true;
+    (await this.firebaseService.userService.getAllUsers()).forEach(user => {
+      this.allUsers.set(parseInt(user.id), user);
+    });
+    this.notes = (await this.firebaseService.getAllNotes()).sort(this.selectedOrder);
+    this.notes.splice(-1, 1);
+    this.loading = false;
+    console.log(this.notes);
+  }
+
+  public onChangeOrder() {
+    this.notes = this.notes.sort(this.selectedOrder);
+  }
+
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (this.isActive) {
+      this.loading = true;
+      this.notes = (await this.firebaseService.getAllNotes()).sort(this.selectedOrder);
+      this.notes.splice(-1, 1);
+      this.loading = false;
     }
+  }
 
-    public async ngOnInit() {
-        this.subscription = this.firebaseService.historyService.onAllNotesUpdate.subscribe(update => this.onNotesUpdate(update));
-
-        (await this.firebaseService.userService.getAllUsers()).forEach(user => {
-            this.allUsers.set(parseInt(user.id), user);
-        });
-        const allNotes = await this.firebaseService.historyService.getAllNotes();
-        if (!allNotes) {
-            return;
-        }
-        this.notes = Object.values(allNotes).filter(note => !!note.amount).sort(this.selectedOrder);
-    }
-
-    public onChangeOrder() {
-        this.notes = this.notes.sort(this.selectedOrder);
-    }
-
-    private onNotesUpdate(allNotes: AllNotes) {
-        if (!allNotes) {
-            return;
-        }
-        console.log('update notes');
-        this.notes = Object.values(allNotes).filter(note => !!note.amount).sort(this.selectedOrder);
-    }
-
-    public ngOnDestroy(): void {
-        this.subscription.unsubscribe();
-    }
 }

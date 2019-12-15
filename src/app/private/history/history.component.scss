@@ -6,6 +6,7 @@
   top: 0;
   z-index: 150;
   background: white;
+  margin-bottom: 6px;
 
   .count {
     position: relative;
@@ -38,7 +39,9 @@
     align-items: center;
     justify-content: space-between;
   }
-
+  .positive .amount {
+    border-color: #7cb342;
+  }
   .amount {
     border: 2px solid #e57373;
     border-radius: 50%;
@@ -50,4 +53,9 @@
   .description {
     margin-bottom: 4px;
   }
+}
+
+.progress-bar {
+  position: relative;
+  top: 70px;
 }

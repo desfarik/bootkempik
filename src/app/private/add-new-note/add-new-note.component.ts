@@ -23,6 +23,8 @@ export class AddNewNoteComponent implements OnInit {
   public allPersons: User[];
   public doublePersonCount: number = 0;
   public me: User;
+  public loading: boolean = false;
+  public maxDate: Date = new Date();
 
   public async ngOnInit() {
     this.addNewNoteForm = this.formBuilder.group({
@@ -70,9 +72,10 @@ export class AddNewNoteComponent implements OnInit {
 
   public async submit() {
     if (this.addNewNoteForm.valid) {
+      this.loading = true;
       const newNote = new Note(this.addNewNoteForm.value.date.getTime(), this.addNewNoteForm.value.amount, this.me, this.addNewNoteForm.value.description, this.getMoneyPerPerson());
-      this.fireBaseService.balanceService.addNewNote(newNote);
-      this.fireBaseService.historyService.addNewNote(newNote);
+      await this.fireBaseService.balanceService.addNewNote(newNote);
+      this.loading = false;
       this.moveToMainPage();
     }
   }

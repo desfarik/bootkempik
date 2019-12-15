@@ -1,0 +1,20 @@
+.vk-icon {
+  display: flex;
+  width: 160px;
+  align-items: center;
+  justify-content: space-around;
+  background: #4a76a8;
+  color: white;
+}
+
+.vk-icon::before {
+  content: "";
+  background: url("../../../assets/vk-icon.png");
+  display: block;
+  width: 20px;
+  height: 12px;
+}
+
+.full-height {
+  margin-top: 50%;
+}

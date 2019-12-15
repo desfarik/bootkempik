@@ -12,32 +12,35 @@
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">bar_chart</mat-icon>
     </ng-template>
-    <app-statistic [isActive]="selected.value === 0"></app-statistic>
+    <app-statistic [isActive]="selected.value === 0"
+                   [allBalances]="allBalance"
+                   [allUsers]="allUsers"
+                   [me]="me"></app-statistic>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">history</mat-icon>
     </ng-template>
-    <app-history></app-history>
+    <app-history [isActive]="selected.value === 1"></app-history>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">person</mat-icon>
     </ng-template>
-    <app-balance [isActive]="selected.value === 2"></app-balance>
+    <app-balance [isActive]="selected.value === 2"
+                 [allBalances]="allBalance"
+                 [allUsers]="allUsers"
+                 [me]="me"></app-balance>
   </mat-tab>
 </mat-tab-group>
-<button class="add-new-note"  routerLink="/add-new-note" routerLinkActive="active" mat-fab aria-label="Example icon-button with a heart icon">
+<button class="add-new-note" routerLink="/add-new-note" routerLinkActive="active" mat-fab
+        aria-label="Example icon-button with a heart icon">
   <mat-icon>add</mat-icon>
 </button>
 
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item>
-    <mat-icon>cached</mat-icon>
-    <span>Обновить данные</span>
-  </button>
-  <button mat-menu-item  (click)="logout()">
+  <button mat-menu-item (click)="logout()">
     <mat-icon>exit_to_app</mat-icon>
     <span>Выйти</span>
   </button>

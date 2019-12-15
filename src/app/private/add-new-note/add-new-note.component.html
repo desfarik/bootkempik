@@ -5,6 +5,10 @@
   <span>Создание новой записи</span>
 </mat-toolbar>
 <div class="scrollable-area">
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+    <div class="click-handler"></div>
+  </div>
   <form [formGroup]="addNewNoteForm" class="form-container">
     <mat-form-field appearance="outline" class="amount-container">
       <mat-label>Сумма</mat-label>
@@ -17,7 +21,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Дата</mat-label>
-      <input matInput [matDatepicker]="picker" placeholder="Выберите дату" formControlName="date">
+      <input matInput [matDatepicker]="picker" placeholder="Выберите дату" formControlName="date" [max]="maxDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker touchUi #picker></mat-datepicker>
     </mat-form-field>

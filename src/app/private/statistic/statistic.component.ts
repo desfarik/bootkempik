@@ -12,19 +12,24 @@ import {Subscription} from "rxjs";
   templateUrl: './statistic.component.html',
   styleUrls: ['./statistic.component.scss']
 })
-export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
+export class StatisticComponent implements OnChanges {
 
-  constructor(private firebaseService: FirebaseService, private authService: AuthorizationService) {
+  constructor() {
   }
 
   @Input()
   public isActive: boolean;
 
+  @Input()
   public allBalances: AllBalance;
+  @Input()
   public allUsers: User[];
+  @Input()
   public me: User;
   public chart: any;
   public commonCredit: number;
+  public good = false;
+  public load = true;
   private chartData = {
     datasets: [{
       data: [],//chartData.map(data => data.value),
@@ -33,46 +38,31 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
     }],
     labels: [],//chartData.map(data => data.name)
   };
-  private subscription: Subscription;
 
-  public onBalanceUpdate(allBalance: AllBalance): void {
-    if (!allBalance) {
+  public onBalanceUpdate(): void {
+    if (!this.allBalances || !this.allUsers || !this.me) {
       return;
     }
-    this.allBalances = allBalance;
     console.log('update all balances');
     this.prepareChartData();
 
     if (this.chartData.labels.length > 0) {
-      if (this.isActive) {
-        this.drawChart();
-      }
+      this.good = false;
+      this.drawChart();
+    } else {
+      this.good = true;
     }
-  }
-
-  public async ngOnInit() {
-    this.subscription = this.firebaseService.balanceService.onAllBalanceUpdate.subscribe(update => this.onBalanceUpdate(update));
-    this.me = this.authService.getCurrentUser();
-    this.allUsers = await this.firebaseService.userService.getAllUsers();
-    this.allBalances = await this.firebaseService.balanceService.getAllBalances();
-    if (!this.allBalances) {
-      return;
-    }
-    this.prepareChartData();
-    this.drawChart();
   }
 
   private prepareChartData() {
-    if(!this.allUsers) {
-      return;
-    }
-    const tempChartData = [];
+    let tempChartData = [];
     this.allUsers.forEach(user => {
       if (this.allBalances[user.id] && this.allBalances[user.id].negative) {
         const balance = Object.values(this.allBalances[user.id].negative).reduce((previousValue, currentValue) => previousValue as number + Math.abs(currentValue as number), 0);
         tempChartData.push({name: user.first_name, value: balance});
       }
     });
+    tempChartData = tempChartData.filter(data => data.value > 0);
     this.chartData.labels = tempChartData.map(data => data.name);
     this.chartData.datasets[0].data = tempChartData.map(data => data.value);
   }
@@ -115,23 +105,13 @@ export class StatisticComponent implements OnInit, OnDestroy, OnChanges {
       },
       plugins: [ChartLabelPlugin]
     });
+    this.load = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.isActive.previousValue === undefined) {
-      return;
-    }
     if (this.isActive) {
-      if (!this.chart) {
-        setTimeout(() => this.drawChart(), 0);
-      } else {
-        this.chart.update();
-      }
+      setTimeout(() => this.onBalanceUpdate(), 0);
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }
 

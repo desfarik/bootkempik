@@ -48,6 +48,9 @@ export class UserService {
     }
     return this.allUsers.get(parseInt(userId));
   }
+  public getForceUser(userId: string): User {
+    return this.allUsers.get(parseInt(userId));
+  }
 
   public async getUserByName(userName: string): Promise<User> {
     if (this.allUsers.size === 0) {

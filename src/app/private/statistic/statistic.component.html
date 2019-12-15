@@ -1,4 +1,13 @@
-<div>
-  <div class="common-credit-title">Суммарная задолженность: {{commonCredit}}</div>
-  <canvas id="myStatChart" style="height: 350px; width: 100vw;"></canvas>
+<div *ngIf="load">
+  <div *ngIf="!good else goodTemplate">
+    <div class="common-credit-title">Суммарная задолженность: {{commonCredit}}</div>
+    <canvas id="myStatChart" style="height: 350px; width: 100vw;"></canvas>
+  </div>
 </div>
+
+<ng-template #goodTemplate>
+  <div class="good">
+    <mat-icon>sentiment_satisfied_alt</mat-icon>
+    <p>Все красавцы<br>Никто никому не должен<br><sub>Во всём винована Алена!!</sub></p>
+  </div>
+</ng-template>

@@ -1,23 +1,37 @@
-<div class="scrollable-tab-area">
-    <div class="reduce-container" *ngIf="persons && persons.length > 0">
-        <div class="select-container" >
-            <mat-select [disableOptionCentering]="true" [(value)]="selectedPerson" (selectionChange)="onChangePerson()">
-                <mat-option *ngFor="let person of persons" [value]="person">
-                    {{person}}
-                </mat-option>
-            </mat-select>
-            <input matInput type="number" autocomplete="off" [formControl]="amountControl">
-        </div>
-        <button mat-raised-button color="primary" type="button" (click)="reduce()">Списать</button>
+<div class="scrollable-tab-area" *ngIf="!goodFriends else good">
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+    <div class="click-handler"></div>
+  </div>
+  <div class="reduce-container" *ngIf="hasCredits else myCredit">
+    <div class="select-container" [formGroup]="formGroup">
+      <mat-select [disableOptionCentering]="true" [(value)]="selectedPerson" (selectionChange)="onChangePerson()">
+        <mat-option *ngFor="let person of persons" [value]="person">
+          {{person}}
+        </mat-option>
+      </mat-select>
+      <input matInput type="number" autocomplete="off" formControlName="amount" [max]="999" [min]="0">
     </div>
-    <div class="error-container">
-        <mat-error *ngIf="amountControl.hasError('min') || amountControl.hasError('max')">
-            Сумма должна быть между 1 и {{maxValue}} рублей
-        </mat-error>
-    </div>
+    <mat-error
+      *ngIf="formGroup.controls.amount.hasError('min') || formGroup.controls.amount.hasError('max') || formGroup.controls.amount.hasError('required')">
+      Размер суммы должен быть между 1 и {{maxValue}} рублей
+    </mat-error>
 
-    <canvas id="myChart" style="height: 350px; width: 100vw;"></canvas>
-    <div class="common-write-off-container" *ngIf="persons && persons.length > 0">
-        <button mat-raised-button color="primary" type="button" (click)="commonReduce()">Взаимное списание</button>
-    </div>
+    <button mat-raised-button color="primary" type="button" (click)="reduce()">Списать</button>
+
+  </div>
+  <canvas id="myChart" style="height: 350px; width: 100vw; margin-top: 14px"></canvas>
+  <div class="common-write-off-container" *ngIf="hasMetualCredits">
+    <button mat-raised-button color="primary" type="button" (click)="mutualReduce()">Взаимное списание</button>
+  </div>
 </div>
+
+<ng-template #myCredit>
+  <p class="info">Всего моя задолженность: {{allCredit}}</p>
+</ng-template>
+<ng-template #good>
+  <div class="good">
+    <mat-icon>sentiment_satisfied_alt</mat-icon>
+    <p>Вы чисты перед долгами)</p>
+  </div>
+</ng-template>
