@@ -7,6 +7,7 @@
   z-index: 150;
   background: white;
   margin-bottom: 6px;
+  padding: 0 16px;
 
   .count {
     position: relative;
@@ -15,7 +16,6 @@
 }
 
 .page-container {
-  padding: 0 16px;
 }
 
 .note.positive .amount {
@@ -25,7 +25,7 @@
 .note {
   border: 1px solid #673ab7;
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin: 0 16px 8px;
   padding: 8px;
   display: flex;
   flex-direction: row;
@@ -64,5 +64,6 @@
 }
 
 .viewport {
-  height: calc(100% - 72px)
+  height: calc(100% - 72px);
+  padding: 0 16px;
 }

@@ -12,8 +12,8 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <cdk-virtual-scroll-viewport itemSize="{{notes.length}}" class="viewport">
-    <div *cdkVirtualFor="let note of notes" class="note">
+  <cdk-virtual-scroll-viewport [itemSize]="notes.length" class="viewport" *ngIf="visible" >
+    <div *cdkVirtualFor="let note of notes; trackBy: trackByDate" class="note">
       <div class="title-container" [ngClass]="{'positive':note.positive}">
         <div>{{note.owner | person}}</div>
         <div class="amount">{{note.amount}}</div>

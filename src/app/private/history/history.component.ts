@@ -14,6 +14,7 @@ export class HistoryComponent implements OnInit, OnChanges {
   public isActive: boolean;
   public notes: Note[] = [];
   public loading = true;
+  public visible = true;
 
 
   public orderTypes = [
@@ -39,11 +40,19 @@ export class HistoryComponent implements OnInit, OnChanges {
 
   public onChangeOrder() {
     this.notes = this.notes.sort(this.selectedOrder);
+    this.visible = false;
+    this.loading = true;
+    setTimeout(() => {
+      this.visible = true;
+      this.loading = false;
+    }, 0);
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (this.isActive) {
       this.loading = true;
+      this.visible = false;
+      setTimeout(() => this.visible = true, 0);
       this.notes = (await this.firebaseService.getAllNotes()).sort(this.selectedOrder);
       this.notes.splice(-1, 1);
       this.loading = false;
