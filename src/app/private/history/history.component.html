@@ -12,17 +12,20 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div *ngFor="let note of notes" class="note">
-    <div class="title-container" [ngClass]="{'positive':note.positive}">
-      <div>{{note.owner | person}}</div>
-      <div class="amount">{{note.amount}}</div>
-      <div>{{note.date | date}}</div>
-    </div>
-    <div>
-      <div class="description">{{note.description}}</div>
-      <div *ngFor="let moneyPerPerson of note.moneyPerPerson">
-        {{allUsers.get(moneyPerPerson.personId) | person}} - {{moneyPerPerson.money}}
+  <cdk-virtual-scroll-viewport itemSize="{{notes.length}}" class="viewport">
+    <div *cdkVirtualFor="let note of notes" class="note">
+      <div class="title-container" [ngClass]="{'positive':note.positive}">
+        <div>{{note.owner | person}}</div>
+        <div class="amount">{{note.amount}}</div>
+        <div>{{note.date | date}}</div>
+      </div>
+      <div>
+        <div class="description">{{note.description}}</div>
+        <div *ngFor="let moneyPerPerson of note.moneyPerPerson">
+          {{allUsers.get(moneyPerPerson.personId) | person}} - {{moneyPerPerson.money}}
+        </div>
       </div>
     </div>
-  </div>
+  </cdk-virtual-scroll-viewport>
+
 </div>

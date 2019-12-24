@@ -26,6 +26,7 @@ import { MoneyPerPersonPipe } from './private/add-new-note/money-per-person.pipe
 import { PersonPipe } from './private/add-new-note/person.pipe';
 import { SelectParticipantsDialog } from './private/add-new-note/select-participants/select-participants-dialog.component';
 import { DatePipe } from './private/history/date.pipe';
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 const APP_DATE_FORMATS = {
   parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -67,6 +68,7 @@ const APP_DATE_FORMATS = {
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    ScrollingModule,
     RouterModule.forRoot(AppRoutes)
   ],
   exports: [

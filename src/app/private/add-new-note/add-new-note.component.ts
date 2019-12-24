@@ -38,6 +38,10 @@ export class AddNewNoteComponent implements OnInit {
   }
 
   public remove(person) {
+    if (!!person.double) {
+      this.doublePersonCount--;
+      person.double = false;
+    }
     const persons = this.addNewNoteForm.controls.persons.value;
     persons.splice(persons.indexOf(person), 1);
     this.addNewNoteForm.controls.persons.setValue(persons);

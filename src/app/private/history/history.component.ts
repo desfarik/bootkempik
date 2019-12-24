@@ -12,7 +12,7 @@ export class HistoryComponent implements OnInit, OnChanges {
 
   @Input()
   public isActive: boolean;
-  public notes: Note[];
+  public notes: Note[] = [];
   public loading = true;
 
 

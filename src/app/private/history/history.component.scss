@@ -17,7 +17,8 @@
 .page-container {
   padding: 0 16px;
 }
-.note.positive .amount{
+
+.note.positive .amount {
   border-color: #4caf50;
 }
 
@@ -57,5 +58,11 @@
 
 .progress-bar {
   position: relative;
-  top: 70px;
+  top: 66px;
+  line-height: 0;
+  height: 0;
+}
+
+.viewport {
+  height: calc(100% - 72px)
 }
