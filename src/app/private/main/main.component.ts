@@ -33,10 +33,8 @@ export class MainComponent implements OnInit {
     window.onhashchange = () => this.onHashChange();
     if (location.hash) {
       const result = location.hash.match(/#access_token=(.*?)&.*user_id=(.*?)$/);
-      this.subscription = this.firebaseService.balanceService.onAllBalanceUpdate.subscribe(update => this.allBalance = update);
-      this.allBalance = this.firebaseService.balanceService.getAllBalances();
-      this.me = this.authorizationService.getCurrentUser();
-      this.allUsers = await this.firebaseService.userService.getAllUsers();
+      this.init();
+
       if (!result) {
         this.onHashChange();
         return;
@@ -55,8 +53,18 @@ export class MainComponent implements OnInit {
         .catch((e) => {
           alert(e);
         });
+    } else {
+      this.init();
     }
   }
+
+  private async init() {
+    this.subscription = this.firebaseService.balanceService.onAllBalanceUpdate.subscribe(update => this.allBalance = update);
+    this.allBalance = this.firebaseService.balanceService.getAllBalances();
+    this.me = this.authorizationService.getCurrentUser();
+    this.allUsers = await this.firebaseService.userService.getAllUsers();
+  }
+
 
   private onHashChange(): void {
     const index = Object.values(this.hashNames).indexOf(location.hash.slice(1));
