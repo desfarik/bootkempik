@@ -27,10 +27,10 @@
     <ng-template mat-tab-label>
       <mat-icon class="example-tab-icon">person</mat-icon>
     </ng-template>
-    <app-balance [isActive]="selected.value === 2"
-                 [allBalances]="allBalance"
-                 [allUsers]="allUsers"
-                 [me]="me"></app-balance>
+    <app-people-balance [isActive]="selected.value === 2"
+                        [balance]="balance"
+                        [allUsers]="allUsers"
+                        [me]="me"></app-people-balance>
   </mat-tab>
 </mat-tab-group>
 <button class="add-new-note" routerLink="/add-new-note" routerLinkActive="active" mat-fab

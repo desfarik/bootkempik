@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
 
   public selected: FormControl = new FormControl(0);
 
-  public tabNames = {0: "Статистика", 1: "История", 2: 'Мой баланс'};
+  public tabNames = {0: "Статистика", 1: "Люди", 2: 'Мой баланс'};
   public hashNames = {0: "stat", 1: "history", 2: 'balance'};
 
   public allBalance: AllBalance;

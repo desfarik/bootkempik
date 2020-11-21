@@ -1,11 +1,8 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {FirebaseService} from "../../service/firebase.service";
-import {AuthorizationService} from "../../service/authorization.service";
-import {AllBalance, Balance} from "../balance/balance";
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Balance} from "../balance/balance";
 import {User} from "../../service/model/user";
 import * as ChartLabelPlugin from 'chartjs-plugin-datalabels';
 import {Chart} from "chart.js";
-import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-statistic',
@@ -33,8 +30,12 @@ export class StatisticComponent implements OnChanges {
   private chartData = {
     datasets: [{
       data: [],//chartData.map(data => data.value),
-      backgroundColor: colors.sort(() => Math.random() - 0.5),
-      label: 'Dataset 1'
+      backgroundColor: colors[0],
+      label: 'Мне должны'
+    }, {
+      data: [],//chartData.map(data => data.value),
+      backgroundColor: colors[1],
+      label: 'Я должен'
     }],
     labels: [],//chartData.map(data => data.name)
   };
@@ -55,16 +56,16 @@ export class StatisticComponent implements OnChanges {
   }
 
   private prepareChartData() {
-    let tempChartData = [];
-    this.allUsers.forEach(user => {
-      if (this.allBalances[user.id] && this.allBalances[user.id].negative) {
-        const balance = Object.values(this.allBalances[user.id].negative).reduce((previousValue, currentValue) => previousValue as number + Math.abs(currentValue as number), 0);
-        tempChartData.push({name: user.first_name, value: balance});
-      }
+    this.chartData.datasets = [];
+    this.allUsers.forEach((user, index) => {
+      this.chartData.datasets.push(
+        {
+          label: user.first_name,
+          backgroundColor: colors[index],
+          data: [this.balance.positive[user.id], Math.abs(this.balance.negative[user.id])]
+        })
     });
-    tempChartData = tempChartData.filter(data => data.value > 0);
-    this.chartData.labels = tempChartData.map(data => data.name);
-    this.chartData.datasets[0].data = tempChartData.map(data => data.value);
+    this.chartData.labels = ["Мне должны", "Я должен"];
   }
 
 
@@ -79,15 +80,25 @@ export class StatisticComponent implements OnChanges {
     }
     //@ts-ignore
     this.chart = new Chart(document.getElementById('myStatChart'), {
-      type: 'pie',
+      type: 'bar',
       data: this.chartData,
       options: {
-        legend: {
-          labels: {
-            fontSize: 14,
-            fontFamily: "Roboto",
-          }
+        scales: {
+          xAxes: [{
+            stacked: true,
+            gridLines: {
+              display: false
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+          }]
         },
+        legend: {
+          display: false
+        },
+
+
         plugins: {
           // Change options for ALL labels of THIS CHART
           datalabels: {
@@ -98,7 +109,10 @@ export class StatisticComponent implements OnChanges {
               family: "Roboto",
             },
             formatter: function (value, context) {
-              return context.chart.data.labels[context.dataIndex] + " " + value;
+              if (value > 0) {
+                return context.dataset.label + " " + value;
+              } else
+                return "";
             }
           }
         }
