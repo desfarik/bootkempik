@@ -13,19 +13,13 @@
       <mat-icon class="example-tab-icon">bar_chart</mat-icon>
     </ng-template>
     <app-statistic [isActive]="selected.value === 0"
-                   [allBalances]="allBalance"
+                   [balance]="balance"
                    [allUsers]="allUsers"
                    [me]="me"></app-statistic>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">history</mat-icon>
-    </ng-template>
-    <app-history [isActive]="selected.value === 1"></app-history>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">person</mat-icon>
+      <mat-icon class="example-tab-icon">people_alt</mat-icon>
     </ng-template>
     <app-people-balance [isActive]="selected.value === 2"
                         [balance]="balance"

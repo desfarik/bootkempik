@@ -34,7 +34,8 @@ export class BalanceService {
     this.balanceDb.loadAllBalances(this.allBalance);
     this.onAllBalanceUpdate.next(this.allBalance);
   }
-  public async mutualReduceCredit(user:User) {
+
+  public async mutualReduceCredit(user: User) {
     this.allBalance = (await this.functions.httpsCallable('mutualReduceCredit')(user)).data as AllBalance;
     console.log(this.allBalance);
     this.balanceDb.loadAllBalances(this.allBalance);
@@ -45,6 +46,12 @@ export class BalanceService {
     this.loadAllBalances(this.onAllBalanceUpdate);
     this.sendAllBalanceUpdate = !this.allBalance;
     return this.allBalance;
+  }
+
+  public getBalance(userId): Promise<Balance> {
+    return this.database.ref(`/balances/${userId}`).once('value').then(snapshot => {
+      return snapshot.val() as Balance;
+    })
   }
 
   private loadAllBalances(subject?: BehaviorSubject<AllBalance>): Promise<AllBalance> {

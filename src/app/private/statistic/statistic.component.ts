@@ -18,7 +18,7 @@ export class StatisticComponent implements OnChanges {
   public isActive: boolean;
 
   @Input()
-  public allBalances: AllBalance;
+  public balance: Balance;
   @Input()
   public allUsers: User[];
   @Input()
@@ -41,7 +41,7 @@ export class StatisticComponent implements OnChanges {
   };
 
   public onBalanceUpdate(): void {
-    if (!this.allBalances || !this.allUsers || !this.me) {
+    if (!this.balance || !this.allUsers || !this.me) {
       return;
     }
     console.log('update all balances');

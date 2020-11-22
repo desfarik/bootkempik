@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {AuthorizationService} from "../../service/authorization.service";
 import {Router} from "@angular/router";
@@ -6,7 +6,7 @@ import {User} from "../../service/model/user";
 import {VkUserService} from "../../service/vk.user.service";
 import {FirebaseService} from "../../service/firebase.service";
 import {Subscription} from "rxjs";
-import {AllBalance} from "../balance/balance";
+import {Balance} from "../balance/balance";
 
 @Component({
   selector: 'app-main',
@@ -20,7 +20,7 @@ export class MainComponent implements OnInit {
   public tabNames = {0: "Статистика", 1: "Люди", 2: 'Мой баланс'};
   public hashNames = {0: "stat", 1: "history", 2: 'balance'};
 
-  public allBalance: AllBalance;
+  public balance: Balance;
   public allUsers: User[];
   public me: User;
 
@@ -59,9 +59,8 @@ export class MainComponent implements OnInit {
   }
 
   private async init() {
-    this.subscription = this.firebaseService.balanceService.onAllBalanceUpdate.subscribe(update => this.allBalance = update);
-    this.allBalance = this.firebaseService.balanceService.getAllBalances();
     this.me = this.authorizationService.getCurrentUser();
+    this.balance = await this.firebaseService.balanceService.getBalance(this.me.id);
     this.allUsers = await this.firebaseService.userService.getAllUsers();
   }
 
