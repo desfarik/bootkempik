@@ -1,44 +1,25 @@
-<div class="scrollable-tab-area" *ngIf="!goodFriends else good">
-  <!--<div *ngIf="loading" class="loading">-->
-  <!--<mat-spinner></mat-spinner>-->
-  <!--<div class="click-handler"></div>-->
-  <!--</div>-->
-  <!--<div class="reduce-container" *ngIf="hasCredits else myCredit">-->
-  <!--<div class="select-container" [formGroup]="formGroup">-->
-  <!--<mat-select [disableOptionCentering]="true" [(value)]="selectedPerson" (selectionChange)="onChangePerson()">-->
-  <!--<mat-option *ngFor="let person of persons" [value]="person">-->
-  <!--{{person}}-->
-  <!--</mat-option>-->
-  <!--</mat-select>-->
-  <!--<input matInput type="number" autocomplete="off" formControlName="amount" [max]="999" [min]="0">-->
-  <!--</div>-->
-  <!--<mat-error-->
-  <!--*ngIf="formGroup.controls.amount.hasError('min') || formGroup.controls.amount.hasError('max') || formGroup.controls.amount.hasError('required')">-->
-  <!--Размер суммы должен быть между 1 и {{maxValue}} рублей-->
-  <!--</mat-error>-->
-
-  <!--<button mat-raised-button color="primary" type="button" (click)="reduce()">Списать</button>-->
-
-  <!--</div>-->
-  <!--<canvas id="myChart" style="height: 350px; width: 100vw; margin-top: 14px"></canvas>-->
-  <!--<div class="common-write-off-container" *ngIf="hasMetualCredits">-->
-  <!--<button mat-raised-button color="primary" type="button" (click)="mutualReduce()">Взаимное списание</button>-->
-  <!--</div>-->
+<div class="scrollable-area">
   <div class="sort-container">
+    <div>Мой баланс: <span ngClass="{{totalBalance > 0 ? 'positive' : 'negative'}}">{{totalBalance}}</span></div>
+    <div>
       <mat-select [disableOptionCentering]="true" [(value)]="selectedOrder" (selectionChange)="onChangeOrder()">
         <mat-option *ngFor="let type of orderTypes" [value]="type.value">
           {{type.viewValue}}
         </mat-option>
       </mat-select>
+    </div>
   </div>
   <div class="people-container">
-    <div class="user-item" *ngFor="let user of viewUsers; trackBy: id">
+    <div class="user-item" *ngFor="let user of viewUsers" mat-ripple
+         routerLink="/user-notes"
+         [queryParams]="{userId: user.id, balance: getBalance(user.id)}"
+         (click)="user.showLoader = true">
       <div class="icon-container">
         <img src="{{user.photo_200_orig}}">
       </div>
       <div class="user-info-container">
         <div class="user-info">
-          <div>{{user.first_name + " " + user.last_name}}</div>
+          <div class="primary-text">{{user.first_name + " " + user.last_name}}</div>
           <div class="user-item-balance-info secondary-text ">Мне должен: <span class="positive">{{getPositiveBalance(user.id)}}</span>
           </div>
           <div class="user-item-balance-info secondary-text ">Я должен:<span class="negative">{{getNegativeBalance(user.id)}}</span>
@@ -48,6 +29,9 @@
           <span ngClass="{{getBalance(user.id) >= 0 ? 'positive' : 'negative'}}">{{getBalance(user.id)}}</span>
           <mat-icon>keyboard_arrow_right</mat-icon>
         </div>
+      </div>
+      <div class="progress-bar-container" *ngIf="user.showLoader">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       </div>
     </div>
   </div>

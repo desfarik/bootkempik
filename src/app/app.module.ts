@@ -8,25 +8,33 @@ import {LoginComponent} from './public/login/login.component';
 import {MainComponent} from './private/main/main.component';
 import {AppRoutes} from "./route-config";
 import {
-  DateAdapter,
-  MAT_DATE_FORMATS, MAT_DATE_LOCALE,
-  MatButtonModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDividerModule,
+  MAT_DATE_FORMATS,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatDialogModule,
   MatIconModule,
   MatInputModule,
-  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRippleModule,
+  MatSelectModule,
   MatTabsModule,
   MatToolbarModule
 } from "@angular/material";
-import {HistoryComponent} from './private/history/history.component';
-import {StatisticComponent} from './private/statistic/statistic.component';
 import {BalanceComponent} from './private/balance/balance.component';
 import {AddNewNoteComponent} from './private/add-new-note/add-new-note.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import { MoneyPerPersonPipe } from './private/add-new-note/money-per-person.pipe';
-import { PersonPipe } from './private/add-new-note/person.pipe';
-import { SelectParticipantsDialog } from './private/add-new-note/select-participants/select-participants-dialog.component';
-import { DatePipe } from './private/history/date.pipe';
+import {MoneyPerPersonPipe} from './private/add-new-note/money-per-person.pipe';
+import {PersonPipe} from './private/add-new-note/person.pipe';
+import {SelectParticipantsDialog} from './private/add-new-note/select-participants/select-participants-dialog.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import {ConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
+import {DatePipe} from "./private/user-notes/date.pipe";
+import {MoneyPipe} from "./private/user-notes/money.pipe";
+import {LongPressDirective} from './directive/long-press.directive';
 
 const APP_DATE_FORMATS = {
   parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -41,14 +49,16 @@ const APP_DATE_FORMATS = {
     AppComponent,
     LoginComponent,
     MainComponent,
-    HistoryComponent,
-    StatisticComponent,
     BalanceComponent,
     AddNewNoteComponent,
     MoneyPerPersonPipe,
     PersonPipe,
+    DatePipe,
+    MoneyPipe,
     SelectParticipantsDialog,
-    DatePipe
+    UserNotesComponent,
+    LongPressDirective,
+    ConfirmDialog
   ],
   imports: [
     MatButtonModule,
@@ -62,20 +72,20 @@ const APP_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatDividerModule,
-    MatChipsModule,
     MatCheckboxModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ScrollingModule,
-    RouterModule.forRoot(AppRoutes)
+    MatRippleModule,
+    MatDialogModule,
+    RouterModule.forRoot(AppRoutes, { relativeLinkResolution: 'legacy' })
   ],
   exports: [
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  entryComponents:[SelectParticipantsDialog],
+  entryComponents:[SelectParticipantsDialog, ConfirmDialog],
 
   providers: [
     // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your

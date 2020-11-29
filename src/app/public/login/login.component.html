@@ -1,6 +1,9 @@
 <mat-toolbar color="primary">
-  <span>Bootkempik balance</span>
+  <span>Bootkempik</span>
 </mat-toolbar>
-<div class="center full-height">
+<div class="center full-height center-column">
   <a mat-raised-button class="vk-icon" href="{{getUrl()}}">Sign in with VK</a>
+  <button mat-raised-button (click)="loginLike(0)">Sign in like NIKITA</button>
+  <button mat-raised-button (click)="loginLike(1)">Sign in like DIMA</button>
+  <button mat-raised-button (click)="loginLike(2)">Sign in like ZHEKA</button>
 </div>

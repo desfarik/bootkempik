@@ -19,8 +19,8 @@ function round(value) {
 const INIT_BALANCE = {positive: {}, negative: {}};
 
 function processBalances(allBalances, newNote) {
-  const ownerBalance = allBalances[newNote.owner.id] || copy(INIT_BALANCE);
-  newNote.moneyPerPerson.filter(moneyPerPerson => moneyPerPerson.personId !== newNote.owner.id)
+  const ownerBalance = allBalances[newNote.ownerId] || copy(INIT_BALANCE);
+  newNote.moneyPerPerson.filter(moneyPerPerson => moneyPerPerson.personId !== newNote.ownerId)
     .forEach(moneyPerPerson => {
       if (!ownerBalance.positive) {
         ownerBalance.positive = {};
@@ -33,12 +33,12 @@ function processBalances(allBalances, newNote) {
       if (!personBalance.negative) {
         personBalance.negative = {};
       }
-      personBalance.negative[newNote.owner.id] = round((personBalance.negative[newNote.owner.id] || 0) - moneyPerPerson.money);
+      personBalance.negative[newNote.ownerId] = round((personBalance.negative[newNote.ownerId] || 0) - moneyPerPerson.money);
       allBalances[moneyPerPerson.personId] = personBalance;
       console.log('all balances', allBalances);
       console.log('end loop');
     });
-  allBalances[newNote.owner.id] = ownerBalance;
+  allBalances[newNote.ownerId] = ownerBalance;
   allBalances.lastUpdateDate = newNote.nowDate;
   console.log(allBalances);
 }
@@ -52,6 +52,13 @@ exports.addNewNotes = functions.runWith(runtimeOpts).https.onCall(async (newNote
   processBalances(allBalances, newNote);
   admin.database().ref('/balances').set(allBalances);
   return allBalances;
+});
+
+exports.getUserNotes = functions.runWith(runtimeOpts).https.onCall(async (userId) => {
+  console.log('start get user Notes with id:' + userId);
+  const id = Number(userId);
+  const allNotes = (await admin.database().ref('/notes').once('value')).val();
+  return Object.values(allNotes).filter(note => note.moneyPerPerson.find(moneyPerPerson => moneyPerPerson.personId === id));
 });
 
 

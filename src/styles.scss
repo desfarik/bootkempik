@@ -16,35 +16,34 @@ body {
 }
 
 .mat-toolbar {
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 textarea {
-  resize: none!important;
+  resize: none !important;
 }
+
 div[style*="width: 80%;"] {
   .mat-dialog-container {
     padding: 0;
   }
 }
 
-
-
 body, html {
   overflow: hidden;
 }
+
 .scrollable-area {
   overflow-y: auto;
   height: calc(100vh - 56px);
 }
 
-.scrollable-tab-area {
-  overflow-y: auto;
-  height: calc(100vh - 104px);
+.toolbar-with-icon.mat-toolbar {
+  padding-left: 0;
 }
 
 mat-tab-body {
-  min-height: calc(100vh - 104px)!important;
+  min-height: calc(100vh - 104px) !important;
 }
 
 .loading {
@@ -93,6 +92,10 @@ mat-tab-body {
   line-height: 24px;
 }
 
+.primary-text {
+  color: rgba(0, 0, 0, 0.87);
+}
+
 .secondary-text {
   color: rgba(0, 0, 0, 0.54);
   font-size: 14px;
@@ -104,4 +107,49 @@ mat-tab-body {
 
 .negative {
   color: #f44336;
+}
+
+.note-icon:before {
+  content: "";
+  background-repeat: no-repeat !important;
+  display: block;
+  width: 36px;
+  height: 36px;
+  background-size: 36px!important;
+}
+
+.note-icon.note-icon-32px:before {
+  width: 32px;
+  height: 32px;
+  background-size: 32px!important;
+}
+
+.beer-icon:before {
+  @extend .note-icon;
+  background: url("assets/beer.svg");
+}
+
+.pizza-icon:before {
+  @extend .note-icon;
+  background: url("assets/pizza.svg");
+}
+
+.cinema-icon:before {
+  @extend .note-icon;
+  background: url("assets/cinema.svg");
+}
+
+.gift-icon:before {
+  @extend .note-icon;
+  background: url("assets/gift.svg");
+}
+
+.food-icon:before {
+  @extend .note-icon;
+  background: url("assets/food.svg");
+}
+
+.party-icon:before {
+  @extend .note-icon;
+  background: url("assets/party.svg");
 }

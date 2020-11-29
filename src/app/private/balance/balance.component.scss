@@ -1,18 +1,23 @@
 .sort-container {
-  padding-left: 16px;
-  width: 145px;
-  height: 40px;
-  line-height: 40px;
-}
-
-.people-container {
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 50px;
+  line-height: 50px;
+  mat-select {
+    width: 150px;
+  }
 }
 
 .user-item {
   display: flex;
-  border-bottom: 1px solid rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   padding-top: 16px;
+  outline: none;
 
   .icon-container {
     width: 82px;
@@ -47,3 +52,8 @@
   }
 }
 
+.progress-bar-container {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}

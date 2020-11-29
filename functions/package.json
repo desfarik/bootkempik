@@ -2,8 +2,8 @@
   "name": "authorized-https-endpoint-functions",
   "description": "restrict HTTPS functions to Firebase users",
   "dependencies": {
-    "firebase-admin": "~7.1.1",
-    "firebase-functions": "^2.2.1"
+    "firebase-admin": "^9.4.1",
+    "firebase-functions": "^3.11.0"
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint --max-warnings=0 .",

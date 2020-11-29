@@ -41,7 +41,7 @@ export class AuthorizationService {
     return localStorage.getItem('vk_token')
   }
 
-  public getUserId(): string {
-    return localStorage.getItem(this.USER_ID);
+  public getUserId(): number {
+    return Number(localStorage.getItem(this.USER_ID));
   }
 }

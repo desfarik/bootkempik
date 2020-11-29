@@ -1,6 +1,6 @@
 export class User {
   public first_name: string;
-  public id: string;
+  public id: number;
   public last_name: string;
   public photo_200_orig: string;
 

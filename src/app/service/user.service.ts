@@ -5,7 +5,7 @@ export class UserService {
 
   private allUsers: Map<number, User> = new Map();
 
-  constructor(private database: firebase.database.Database, private functions: firebase.functions.Functions) {
+  constructor(private database: firebase.database.Database) {
     this.loadAllUsers();
   }
 
@@ -25,7 +25,7 @@ export class UserService {
   private loadAllUsers(): Promise<void> {
     return this.getForceAllUsers().then((allUsers) => {
       allUsers.forEach(user => {
-        this.allUsers.set(parseInt(user.id), user);
+        this.allUsers.set(user.id, user);
       })
     })
   }
@@ -39,15 +39,16 @@ export class UserService {
     if (this.allUsers.size === 0) {
       await this.loadAllUsers();
     }
-    return Array.from(this.allUsers.values())
+    return copy(Array.from(this.allUsers.values()));
   }
 
   public async getUser(userId: string): Promise<User> {
     if (this.allUsers.size === 0) {
       await this.loadAllUsers();
     }
-    return this.allUsers.get(parseInt(userId));
+    return copy(this.allUsers.get(parseInt(userId)));
   }
+
   public getForceUser(userId: string): User {
     return this.allUsers.get(parseInt(userId));
   }
@@ -64,6 +65,10 @@ export class UserService {
     const user = this.allUsers.get(parseInt(userId, 10));
     return user && user.first_name;
   }
+}
+
+function copy(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 

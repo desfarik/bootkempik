@@ -1,22 +1,23 @@
-import {User} from '../../service/model/user';
-
 export class Note {
-    public nowDate: number;
+  public nowDate: number;
+  public openFor: number[];
 
-    constructor(public date: number, public amount: number, public owner: User, public description: string,
-                public moneyPerPerson: MoneyPerPerson[], public positive = false) {
-        this.nowDate = new Date().getTime();
-    }
+  constructor(public date: number, public amount: number, public ownerId: number, public description: string,
+              public moneyPerPerson: MoneyPerPerson[], public title: string, public type: string) {
+    this.nowDate = new Date().getTime();
+    this.openFor = this.moneyPerPerson.filter(person => person.personId !== ownerId).map(person => person.personId);
+  }
 
 }
 
 export interface MoneyPerPerson {
-    money: number;
-    personId: number;
+  money: number;
+  personId: number;
 }
 
 export interface AllNotes {
-    // @ts-ignore
-    lastUpdateDate: number;
-    [id: string]: Note;
+  // @ts-ignore
+  lastUpdateDate: number;
+
+  [id: string]: Note;
 }
