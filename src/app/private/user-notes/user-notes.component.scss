@@ -1,0 +1,89 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  .balance {
+    margin-left: 5px;
+  }
+}
+
+.debt-icon {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: white;
+}
+
+.debt-icon:before {
+  content: "";
+  background: url("../../../assets/hand-money-income-note.svg");
+  background-repeat: no-repeat;
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin-top: 6px;
+  margin-left: 5px;
+}
+
+.viewport {
+  height: 100%;
+}
+
+.note {
+  color: #8bc34a;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+.note.negative {
+  color: #f44336;
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+}
+
+.note-type-icon {
+  padding-right: 16px;
+}
+
+.edit-mode {
+  .toolbar {
+    background: #673ab7;
+    color: white;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+  .note {
+    &.negative {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    &.selected.note {
+      background: #f4eaff;
+    }
+  }
+  .amount mat-icon {
+    visibility: hidden;
+  }
+}
+
+.note.closed {
+  opacity: 0.4;
+  pointer-events: none;
+  &:before {
+    content: "";
+    position: absolute;
+    width: calc(100% - 32px);
+    height: 3px;
+    background: rgba(0, 0, 0, 0.25);
+    margin-top: 17px;
+    z-index: 50;
+  }
+}
