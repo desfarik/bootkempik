@@ -4,8 +4,9 @@
 }
 
 .content {
-  padding: 24px 0;
-
+  margin: 0;
+  padding: 16px 0;
+  max-height: 40vh;
 }
 
 .person-to-select {
@@ -29,6 +30,10 @@
 }
 
 .actions {
+  padding: 0;
+  padding-top: 8px;
+  margin: 0;
+  justify-content: space-between;
   button {
     margin: 0 12px 12px;
   }
