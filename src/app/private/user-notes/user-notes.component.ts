@@ -18,7 +18,7 @@ export class UserNotesComponent implements OnInit {
               private router: Router, private cacheService: CacheService, public dialog: MatDialog) {
   }
 
-  public notes: SelectedNote[];
+  public notes: SelectedNote[] = [];
   public user: User;
   public me: User;
   public mode: string = "VIEW";
@@ -28,10 +28,32 @@ export class UserNotesComponent implements OnInit {
     this.me = this.authorizationService.getCurrentUser();
     this.route.queryParams.subscribe(async (params) => {
       this.user = await this.firebaseService.userService.getUser(params.userId);
+      this.route.data.subscribe(data => {
+        this.sortNotes(data.userNotes as SelectedNote[]);
+      });
     });
-    this.route.data.subscribe(data => {
-      this.notes = (data.userNotes as SelectedNote[]).sort((a, b) => b.date - a.date)
-    })
+  }
+
+  private sortNotes(userNotes: Note[]) {
+    const closedNotes = [];
+    const openedNotes = [];
+    userNotes.sort((a, b) => b.date - a.date)
+      .forEach(note => {
+        if (this.isClosedNote(note)) {
+          closedNotes.push(note);
+        } else {
+          openedNotes.push(note);
+        }
+      });
+    this.notes = [...openedNotes, ...closedNotes];
+  }
+
+  public isClosedNote(note: Note): boolean {
+    if (note.ownerId === this.me.id) {
+      return !note.openFor?.includes(this.user.id)
+    } else {
+      return !note.openFor?.includes(this.me.id)
+    }
   }
 
   public openNoteView(note: SelectedNote) {
@@ -44,8 +66,8 @@ export class UserNotesComponent implements OnInit {
   }
 
   public changeModeToEdit(note: SelectedNote) {
-    this.mode = "EDIT";
-    if (note.ownerId === this.me.id) {
+    if (note.ownerId === this.me.id && !this.isClosedNote(note)) {
+      this.mode = "EDIT";
       note.selected = true;
     }
   }
@@ -88,12 +110,14 @@ export class UserNotesComponent implements OnInit {
         this.notes.forEach(note => {
           if (note.selected) {
             updatedNotes.push(note);
-            note.openFor.splice(note.openFor.findIndex((userId) => userId === this.user.id), 1);
+            note.openFor?.splice(note.openFor.findIndex((userId) => userId === this.user.id), 1);
           }
         });
+        updatedNotes.forEach(note => note.selected = false);
         await this.firebaseService.updateNotes(updatedNotes);
         await this.firebaseService.balanceService.closeNotes(updatedNotes, this.user.id, total);
         this.changeModeToView();
+        this.sortNotes(this.notes);
         this.loading = false;
       }
       console.log(result);

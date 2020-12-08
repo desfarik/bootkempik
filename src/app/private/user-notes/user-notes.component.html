@@ -15,10 +15,13 @@
       <div *cdkVirtualFor="let note of notes;" class="note"
            mat-ripple
            [matRippleColor]="mode === 'VIEW' ? 'rgba(0,0,0,.1)' :'rgba(219, 194, 251, 0.3)'"
-           [matRippleDisabled]="note.selected"
            (click)="openNoteView(note)"
-           [ngClass]="{ 'negative' : note.ownerId !== me.id, 'selected' : note.selected, 'closed' : !note.openFor?.includes(user.id)}"
-           long-press (onLongPress)="changeModeToEdit(note)" (onLongPressing)="onLongPressing()">
+           [class.negative]="note.ownerId !== me.id"
+           [class.selected]="note.selected"
+           [class.closed]="isClosedNote(note)"
+           long-press
+           (onLongPress)="changeModeToEdit(note)"
+           (onLongPressing)="onLongPressing()">
         <div class="title-container">
           <i class="note-type-icon" ngClass="{{note.type + '-icon'}}"></i>
           <div>

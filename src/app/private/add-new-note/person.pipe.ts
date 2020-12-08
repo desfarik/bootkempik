@@ -13,9 +13,6 @@ export class PersonPipe implements PipeTransform {
   }
 
   transform(value: User, changeMe: boolean = true): any {
-    if (changeMe && value?.id === this.meId) {
-      return 'Я';
-    }
     return value && (value.first_name + " " + value.last_name);
   }
 
