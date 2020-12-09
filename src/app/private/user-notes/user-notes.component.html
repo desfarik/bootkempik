@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="amount">
-          <div>{{note.ownerId !== me.id ? '-' : ''}}{{note.moneyPerPerson | money : user.id}}</div>
+          <div>{{note.ownerId !== me.id ? '-' : ''}}{{note.moneyPerPerson | money : note.ownerId === me.id ? user.id : me.id}}</div>
           <mat-icon class="primary-text">keyboard_arrow_right</mat-icon>
         </div>
       </div>

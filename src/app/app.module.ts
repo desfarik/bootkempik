@@ -25,11 +25,11 @@ import {
   MatToolbarModule
 } from "@angular/material";
 import {BalanceComponent} from './private/balance/balance.component';
-import {AddNewNoteComponent} from './private/add-new-note/add-new-note.component';
+import {AddNewNoteComponent, ErrorDialog} from './private/add-new-note/add-new-note.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {MoneyPerPersonPipe} from './private/add-new-note/money-per-person.pipe';
 import {PersonPipe} from './private/add-new-note/person.pipe';
-import {SelectParticipantsDialog} from './private/add-new-note/select-participants/select-participants-dialog.component';
+import {SelectParticipantsDialog} from './private/add-new-note/dialog/select-participants/select-participants-dialog.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {ConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
 import {DatePipe} from "./private/user-notes/date.pipe";
@@ -58,7 +58,8 @@ const APP_DATE_FORMATS = {
     SelectParticipantsDialog,
     UserNotesComponent,
     LongPressDirective,
-    ConfirmDialog
+    ConfirmDialog,
+    ErrorDialog
   ],
   imports: [
     MatButtonModule,
@@ -79,13 +80,13 @@ const APP_DATE_FORMATS = {
     ScrollingModule,
     MatRippleModule,
     MatDialogModule,
-    RouterModule.forRoot(AppRoutes, { relativeLinkResolution: 'legacy' })
+    RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'})
   ],
   exports: [
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  entryComponents:[SelectParticipantsDialog, ConfirmDialog],
+  entryComponents: [SelectParticipantsDialog, ConfirmDialog, ErrorDialog],
 
   providers: [
     // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your

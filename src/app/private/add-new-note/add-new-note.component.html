@@ -18,7 +18,8 @@
   <form [formGroup]="addNewNoteForm" class="form-container" [ngClass]="{'disabled': readonlyMode}">
     <mat-form-field appearance="outline">
       <mat-label>Заголовок</mat-label>
-      <input matInput formControlName="title" type="text" autocomplete="off">
+      <input matInput #title formControlName="title" type="text" autocomplete="off" maxlength="25">
+      <mat-hint align="end">{{title.value.length}} / 25</mat-hint>
       <mat-error *ngIf="addNewNoteForm.controls.title.hasError('maxlength')">
         Заголовок не может иметь более 25 символов
       </mat-error>
@@ -75,7 +76,8 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Описание</mat-label>
-      <textarea matInput formControlName="description" class="description"></textarea>
+      <textarea matInput formControlName="description" #description class="description" maxlength="96"></textarea>
+      <mat-hint align="end">{{description.value.length}} / 96</mat-hint>
     </mat-form-field>
 
     <button type="submit" hidden #submitButton (click)="submit()"></button>

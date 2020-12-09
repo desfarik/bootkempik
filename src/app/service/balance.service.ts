@@ -41,14 +41,15 @@ export class BalanceService {
     this.saveLocalAllBalance(allBalances);
   }
 
-  public async closeNotes(notes: Note[], userId: number, total: number) {
+  public async updateBalance(meId: number, debtUserId: number, sum: number) {
     const allBalances = await this.getAllBalances();
-    notes.forEach(note => {
-      const ownerBalance = allBalances[note.ownerId];
-      ownerBalance.positive[userId] = Number((ownerBalance.positive[userId] - total).toFixed(2));
-      const userBalance = allBalances[userId];
-      userBalance.negative[note.ownerId] = Number((userBalance.negative[note.ownerId] + total).toFixed(2));
-    });
+
+    const ownerBalance = allBalances[meId];
+    ownerBalance.positive[debtUserId] = Number((ownerBalance.positive[debtUserId] - sum).toFixed(2));
+
+    const userBalance = allBalances[debtUserId];
+    userBalance.negative[meId] = Number((userBalance.negative[meId] + sum).toFixed(2));
+
     console.log('start update all balances');
     await this.database.ref('/balances').set(allBalances);
     this.saveLocalAllBalance(allBalances);

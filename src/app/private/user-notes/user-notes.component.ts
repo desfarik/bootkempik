@@ -115,7 +115,7 @@ export class UserNotesComponent implements OnInit {
         });
         updatedNotes.forEach(note => note.selected = false);
         await this.firebaseService.updateNotes(updatedNotes);
-        await this.firebaseService.balanceService.closeNotes(updatedNotes, this.user.id, total);
+        await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, total);
         this.changeModeToView();
         this.sortNotes(this.notes);
         this.loading = false;

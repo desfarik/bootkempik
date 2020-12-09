@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../../service/model/user";
 import {AuthorizationService} from "../../service/authorization.service";
 import {FirebaseService} from "../../service/firebase.service";
-import {MatDialog} from "@angular/material";
-import {SelectParticipantsDialog} from "./select-participants/select-participants-dialog.component";
+import {MAT_DIALOG_DATA, MatDialog} from "@angular/material";
+import {SelectParticipantsDialog} from "./dialog/select-participants/select-participants-dialog.component";
 import {MoneyPerPerson, Note} from "./note";
 import {ActivatedRoute} from "@angular/router";
 
@@ -34,7 +34,7 @@ export class AddNewNoteComponent implements OnInit {
     this.addNewNoteForm = this.formBuilder.group({
       'title': [null, [Validators.required, Validators.maxLength(25)]],
       'amount': [null, [Validators.required, Validators.max(999), Validators.min(1)]],
-      'description': [null],
+      'description': [null, Validators.maxLength(96)],
       'date': [new Date(), Validators.required],
       'persons': [[], Validators.required]
     });
@@ -104,6 +104,10 @@ export class AddNewNoteComponent implements OnInit {
 
   public async submit() {
     if (this.addNewNoteForm.valid) {
+      if (this.addNewNoteForm.value.persons.length === 1 && this.addNewNoteForm.value.persons[0].id === this.me.id) {
+        this.dialog.open(ErrorDialog, {});
+        return;
+      }
       this.loading = true;
       const newNote = new Note(this.addNewNoteForm.value.date.getTime(), this.addNewNoteForm.value.amount, this.me.id, this.addNewNoteForm.value.description, this.getMoneyPerPerson(),
         this.addNewNoteForm.value.title, this.selectedType);
@@ -142,5 +146,14 @@ export class AddNewNoteComponent implements OnInit {
       }
     });
     return result;
+  }
+}
+
+@Component({
+  selector: 'error-dialog',
+  templateUrl: './dialog/error/drinking-error.html',
+})
+export class ErrorDialog {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
   }
 }
