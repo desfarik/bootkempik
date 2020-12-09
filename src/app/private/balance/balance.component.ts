@@ -41,6 +41,7 @@ export class BalanceComponent implements OnInit {
       if (allBalance) {
         this.balance = allBalance[this.me.id];
         this.totalBalance = Number(this.viewUsers.reduce?.((total: number, user: User) => total + this.getBalance(user.id), 0).toFixed?.(2));
+        this.viewUsers = this.viewUsers.sort(this.selectedOrder);
       }
     });
   }
