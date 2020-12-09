@@ -15,6 +15,7 @@ export const AppRoutes: Routes = [
       {
         path: '',
         component: MainComponent,
+        data: {animation: 'Main'}
       }, {
         path: 'add-new-note',
         resolve: {note: ViewNoteResolver},
@@ -35,5 +36,6 @@ export const AppRoutes: Routes = [
   {
     path: '**',
     component: MainComponent,
+    data: {animation: 'Main'}
   }
 ];

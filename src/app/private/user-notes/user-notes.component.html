@@ -1,4 +1,4 @@
-<div [ngClass]="{'edit-mode': mode==='EDIT'}">
+<div [ngClass]="{'edit-mode': mode==='EDIT'}" class="wrapper">
   <mat-toolbar class="toolbar toolbar-with-icon">
     <div class="title-container">
       <button mat-icon-button (click)="mode === 'VIEW' ? moveToMainPage() : changeModeToView()">
