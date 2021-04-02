@@ -1,0 +1,55 @@
+<div class="photo-uploader-container" (click)="onPhotoUploaderClick()"
+     [class.view-mode]="viewMode">
+    <div *ngIf="loading" class="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="photoUrl; else noPhoto"
+         class="photo-wrapper">
+        <img #photo [src]="photoUrl"
+             [style.width]="zoomPercent + 100 + '%'"
+             [style.margin-left]="-(zoomPercent/ 2) + '%'"
+             [style.transform]="'rotate(' + rotateDeg + 'deg)'">
+    </div>
+</div>
+<ng-template #noPhoto>
+    <div class="no-photo-container">
+        <div>
+            <mat-icon class="image">image</mat-icon>
+        </div>
+        <p *ngIf="!readonly" class="secondary-text">Загрузите изображение</p>
+        <p *ngIf="readonly" class="secondary-text">Здесь могло быть ваше изображение</p>
+    </div>
+</ng-template>
+
+<input #photoInput hidden type="file" accept="image/jpeg,image/png" (change)="onSelectPhoto($event)">
+
+<div *ngIf="viewMode" class="view-mode-controls top">
+    <button mat-icon-button (click)="exitFromViewMode()">
+        <mat-icon>close</mat-icon>
+    </button>
+    Просмотр изображения
+</div>
+
+<div *ngIf="viewMode" class="view-mode-controls bottom">
+    <div>
+        <button mat-icon-button (click)="zoom(+1)">
+            <mat-icon>zoom_in</mat-icon>
+        </button>
+        <button mat-icon-button (click)="zoom(-1)">
+            <mat-icon>zoom_out</mat-icon>
+        </button>
+        <button mat-icon-button class="done" (click)="exitFromViewMode()">
+            <mat-icon>done</mat-icon>
+        </button>
+        <button mat-icon-button (click)="photoInput.click()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="rotateImage(-90)">
+            <mat-icon>undo</mat-icon>
+        </button>
+        <button mat-icon-button (click)="rotateImage(+90)">
+            <mat-icon>redo</mat-icon>
+        </button>
+    </div>
+
+</div>

@@ -1,88 +1,98 @@
 <div class="wrapper">
-  <mat-toolbar color="{{readonlyMode ? '' :'primary'}}" class="toolbar toolbar-with-icon">
-    <div class="title-container">
-      <button mat-icon-button (click)="moveToMainPage()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <span *ngIf="!readonlyMode">Создание новой записи</span>
-      <span *ngIf="readonlyMode">Создал: {{owner | person : false}}</span>
-    </div>
-    <button *ngIf="!readonlyMode" class="submit-button" mat-icon-button color="primary" (click)="submitButton.click()">
-      <mat-icon>done</mat-icon>
-    </button>
-  </mat-toolbar>
-  <div class="scrollable-area">
-    <div *ngIf="loading" class="loading">
-      <mat-spinner></mat-spinner>
-      <div class="click-handler"></div>
-    </div>
-    <form [formGroup]="addNewNoteForm" class="form-container" [ngClass]="{'disabled': readonlyMode}">
-      <mat-form-field appearance="outline">
-        <mat-label>Заголовок</mat-label>
-        <input matInput #title formControlName="title" type="text" autocomplete="off" maxlength="25">
-        <mat-hint align="end">{{title.value.length}} / 25</mat-hint>
-        <mat-error *ngIf="addNewNoteForm.controls.title.hasError('maxlength')">
-          Заголовок не может иметь более 25 символов
-        </mat-error>
-      </mat-form-field>
-
-      <div class="note-type-container" [ngClass]="{'disabled':readonlyMode}">
-        <div class="note-type" mat-ripple *ngFor="let type of noteTypes"
-             [ngClass]="{'selected': type === selectedType}">
-          <i class="note-icon-32px" [ngClass]="type + '-icon'" (click)="selectedType = type"></i>
-        </div>
-      </div>
-
-      <mat-form-field appearance="outline" class="amount-container">
-        <mat-label>Сумма</mat-label>
-        <input matInput formControlName="amount" type="number" autocomplete="off" max="999" min="1">
-        <mat-error
-          *ngIf="addNewNoteForm.controls.amount.hasError('min') || addNewNoteForm.controls.amount.hasError('max')">
-          Размер суммы должен быть между 1 и 999 рублей
-        </mat-error>
-        <div matSuffix class="amount-icon">Br</div>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Дата</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Выберите дату" formControlName="date" [max]="maxDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #picker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="person-container" [ngClass]="{'disabled':readonlyMode}">
-        <mat-label>Участники</mat-label>
-        <div *ngFor="let person of addNewNoteForm.controls.persons.value" class="selected-person">
-          <span>{{person | person}}</span>
-          <div class="center person-actions">
-            <span>{{addNewNoteForm.controls.amount.value | moneyPerPerson : addNewNoteForm.controls.persons.value.length : person : doublePersonCount}}</span>
-            <button [ngClass]="{'active': person.double}" class="toggle-double" type="button" mat-icon-button
-                    color="primary" (click)="toggleDoubleRate(person)">
-              <mat-icon>exposure_plus_1</mat-icon>
+    <mat-toolbar color="{{readonlyMode ? '' :'primary'}}" class="toolbar toolbar-with-icon">
+        <div class="title-container">
+            <button mat-icon-button (click)="moveToMainPage()">
+                <mat-icon>arrow_back</mat-icon>
             </button>
-            <button *ngIf="!readonlyMode" type="button" mat-icon-button color="primary" (click)="remove(person)">
-              <mat-icon>clear</mat-icon>
-            </button>
-          </div>
+            <span *ngIf="!readonlyMode">Создание новой записи</span>
+            <span *ngIf="readonlyMode">Создал: {{owner | person : false}}</span>
         </div>
-        <div class="center add-new-person">
-          <button
-            [disabled]="(addNewNoteForm.controls && addNewNoteForm.controls.persons.value.length === (allPersons && allPersons.length || 0) +1)"
-            type="button"
-            mat-stroked-button color="primary" (click)="openDialog()">
-            Добавить
-          </button>
+        <button *ngIf="!readonlyMode" class="submit-button" mat-icon-button color="primary"
+                (click)="submitButton.click()">
+            <mat-icon>done</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div class="scrollable-area">
+        <div *ngIf="loading" class="loading">
+            <mat-spinner></mat-spinner>
+            <div class="click-handler"></div>
         </div>
-        <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">
-      </mat-form-field>
+        <form [formGroup]="addNewNoteForm" class="form-container" [ngClass]="{'disabled': readonlyMode}">
+            <mat-form-field appearance="outline">
+                <mat-label>Заголовок</mat-label>
+                <input matInput #title formControlName="title" type="text" autocomplete="off" maxlength="25">
+                <mat-hint align="end">{{title.value.length}} / 25</mat-hint>
+                <mat-error *ngIf="addNewNoteForm.controls.title.hasError('maxlength')">
+                    Заголовок не может иметь более 25 символов
+                </mat-error>
+            </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Описание</mat-label>
-        <textarea matInput formControlName="description" #description class="description" maxlength="96"></textarea>
-        <mat-hint align="end">{{description.value.length}} / 96</mat-hint>
-      </mat-form-field>
+            <div class="note-type-container" [ngClass]="{'disabled':readonlyMode}">
+                <div class="note-type" mat-ripple *ngFor="let type of noteTypes"
+                     [ngClass]="{'selected': type === selectedType}">
+                    <i class="note-icon-32px" [ngClass]="type + '-icon'" (click)="selectedType = type"></i>
+                </div>
+            </div>
 
-      <button type="submit" hidden #submitButton (click)="submit()"></button>
-    </form>
-  </div>
+            <div class="photo-amount-date-container">
+                <app-photo-uploader class="photo-container"></app-photo-uploader>
+                <div>
+                    <mat-form-field appearance="outline" class="amount-container">
+                        <mat-label>Сумма</mat-label>
+                        <input matInput formControlName="amount" type="number" autocomplete="off" max="999" min="1">
+                        <mat-error
+                                *ngIf="addNewNoteForm.controls.amount.hasError('min') || addNewNoteForm.controls.amount.hasError('max')">
+                            Размер суммы должен быть между 1 и 999 рублей
+                        </mat-error>
+                        <div matSuffix class="amount-icon">Br</div>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Дата</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="Выберите дату" formControlName="date"
+                               [max]="maxDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="person-container" [ngClass]="{'disabled':readonlyMode}">
+                <mat-label>Участники</mat-label>
+                <div *ngFor="let person of addNewNoteForm.controls.persons.value" class="selected-person">
+                    <span>{{person | person}}</span>
+                    <div class="center person-actions">
+                        <span>{{addNewNoteForm.controls.amount.value | moneyPerPerson : addNewNoteForm.controls.persons.value.length : person : doublePersonCount}}</span>
+                        <button [ngClass]="{'active': person.double}" class="toggle-double" type="button"
+                                mat-icon-button
+                                color="primary" (click)="toggleDoubleRate(person)">
+                            <mat-icon>exposure_plus_1</mat-icon>
+                        </button>
+                        <button *ngIf="!readonlyMode" type="button" mat-icon-button color="primary"
+                                (click)="remove(person)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="center add-new-person">
+                    <button
+                            [disabled]="(addNewNoteForm.controls && addNewNoteForm.controls.persons.value.length === (allPersons && allPersons.length || 0) +1)"
+                            type="button"
+                            mat-stroked-button color="primary" (click)="openDialog()">
+                        Добавить
+                    </button>
+                </div>
+                <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Описание</mat-label>
+                <textarea matInput formControlName="description" #description class="description"
+                          maxlength="96"></textarea>
+                <mat-hint align="end">{{description.value.length}} / 96</mat-hint>
+            </mat-form-field>
+
+            <button type="submit" hidden #submitButton (click)="submit()"></button>
+        </form>
+    </div>
 </div>

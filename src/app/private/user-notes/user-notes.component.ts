@@ -134,10 +134,10 @@ export class UserNotesComponent implements OnInit {
                     this.loading = true;
                     const updatedNotes = [];
                     this.notes.forEach(note => {
-                        if (note.selected) {
-                            updatedNotes.push(note);
-                            note.openFor?.splice(note.openFor.findIndex((userId) => userId === this.user.id), 1);
-                        }
+                        // if (note.selected) {
+                        //     updatedNotes.push(note);
+                        //     note.openFor?.splice(note.openFor.findIndex((userId) => userId === this.user.id), 1);
+                        // }
                     });
                     updatedNotes.forEach(note => note.selected = false);
                     await this.firebaseService.updateNotes(updatedNotes);

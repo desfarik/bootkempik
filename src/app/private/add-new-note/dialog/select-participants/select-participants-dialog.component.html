@@ -10,6 +10,6 @@
   </div>
 </div>
 <div mat-dialog-actions class="actions">
-  <button mat-raised-button (click)="submit()">Выбрать</button>
   <button mat-raised-button color="primary" (click)="submitAll()">Выбрать всех</button>
+  <button mat-raised-button [disabled]="isSubmitDisabled" (click)="submit()">Выбрать</button>
 </div>

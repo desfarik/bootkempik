@@ -2,6 +2,7 @@
   .mat-pseudo-checkbox {
     display: none;
   }
+
   .mat-option-text {
     color: rgba(0, 0, 0, .87) !important;
   }
@@ -28,6 +29,7 @@
   flex-direction: column;
   align-items: center;
   padding: 24px;
+
   .mat-form-field {
     width: 100%;
   }
@@ -63,6 +65,7 @@
 
 .amount-container {
   margin-bottom: 5px;
+
   ::ng-deep {
     .mat-form-field-suffix {
       position: relative;
@@ -85,6 +88,7 @@
 .toggle-double {
   color: rgba(0, 0, 0, 0.54);
   margin-left: 10px;
+
   &.active {
     color: #673ab7;
   }
@@ -141,9 +145,27 @@
     align-items: center;
     justify-content: center;
   }
+
   .selected {
     border-color: #673ab7;
   }
 }
 
 
+.photo-amount-date-container {
+  display: flex;
+  width: 100%;
+
+  .photo-container {
+    min-width: 140px;
+    max-width: 140px;
+    margin: 4px 16px 25px 0px;
+    height: 153px;
+  }
+
+  ::ng-deep {
+    .mat-form-field-infix {
+      width: auto !important;
+    }
+  }
+}
