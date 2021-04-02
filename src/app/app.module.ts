@@ -8,21 +8,21 @@ import {LoginComponent} from './public/login/login.component';
 import {MainComponent} from './private/main/main.component';
 import {AppRoutes} from "./route-config";
 import {
-  MAT_DATE_FORMATS,
-  MatButtonModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatIconModule,
-  MatInputModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatTabsModule,
-  MatToolbarModule
+    MAT_DATE_FORMATS,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatTabsModule,
+    MatToolbarModule
 } from "@angular/material";
 import {BalanceComponent} from './private/balance/balance.component';
 import {AddNewNoteComponent, ErrorDialog} from './private/add-new-note/add-new-note.component';
@@ -31,72 +31,73 @@ import {MoneyPerPersonPipe} from './private/add-new-note/money-per-person.pipe';
 import {PersonPipe} from './private/add-new-note/person.pipe';
 import {SelectParticipantsDialog} from './private/add-new-note/dialog/select-participants/select-participants-dialog.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
-import {ConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
-import {DatePipe} from "./private/user-notes/date.pipe";
-import {MoneyPipe} from "./private/user-notes/money.pipe";
+import {ConfirmDialog, MutualConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
+import {DatePipe} from "./private/user-notes/pipe/date.pipe";
+import {MoneyPipe} from "./private/user-notes/pipe/money.pipe";
 import {LongPressDirective} from './directive/long-press.directive';
 
 const APP_DATE_FORMATS = {
-  parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
-  display: {
-    dateInput: {month: 'long', year: 'numeric', day: 'numeric'},
-    monthYearLabel: {year: 'numeric'}
-  }
+    parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
+    display: {
+        dateInput: {month: 'long', year: 'numeric', day: 'numeric'},
+        monthYearLabel: {year: 'numeric'}
+    }
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    MainComponent,
-    BalanceComponent,
-    AddNewNoteComponent,
-    MoneyPerPersonPipe,
-    PersonPipe,
-    DatePipe,
-    MoneyPipe,
-    SelectParticipantsDialog,
-    UserNotesComponent,
-    LongPressDirective,
-    ConfirmDialog,
-    ErrorDialog
-  ],
-  imports: [
-    MatButtonModule,
-    MatTabsModule,
-    BrowserModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    BrowserAnimationsModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    ScrollingModule,
-    MatRippleModule,
-    MatDialogModule,
-    RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'})
-  ],
-  exports: [
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  entryComponents: [SelectParticipantsDialog, ConfirmDialog, ErrorDialog],
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        MainComponent,
+        BalanceComponent,
+        AddNewNoteComponent,
+        MoneyPerPersonPipe,
+        PersonPipe,
+        DatePipe,
+        MoneyPipe,
+        SelectParticipantsDialog,
+        UserNotesComponent,
+        LongPressDirective,
+        ConfirmDialog,
+        MutualConfirmDialog,
+        ErrorDialog
+    ],
+    imports: [
+        MatButtonModule,
+        MatTabsModule,
+        BrowserModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatMenuModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        BrowserAnimationsModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        ScrollingModule,
+        MatRippleModule,
+        MatDialogModule,
+        RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'})
+    ],
+    exports: [
+        MatDatepickerModule,
+        MatNativeDateModule,
+    ],
+    entryComponents: [SelectParticipantsDialog, ConfirmDialog, ErrorDialog, MutualConfirmDialog],
 
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
-    },
-  ],
-  bootstrap: [AppComponent]
+    providers: [
+        // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+        // application's root module. We provide it at the component level here, due to limitations of
+        // our example generation script.
+        {
+            provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
+        },
+    ],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule {

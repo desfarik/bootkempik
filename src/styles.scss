@@ -105,6 +105,10 @@ mat-tab-body {
   font-size: 14px;
 }
 
+.bold-text {
+  font-weight: 500;
+}
+
 .positive {
   color: #8bc34a;
 }
@@ -156,4 +160,20 @@ mat-tab-body {
 .party-icon:before {
   @extend .note-icon;
   background: url("assets/party.svg");
+}
+
+.mutual-icon:before {
+  @extend .note-icon;
+  background: url("assets/scale.svg");
+}
+
+.debt-icon:before {
+  @extend .note-icon;
+  background: url("assets/dollar.svg");
+}
+
+.mutual-write-off:before {
+  @extend .note-icon;
+  background: url("assets/hand-shake.svg");
+
 }

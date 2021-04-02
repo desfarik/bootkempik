@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Подтвердите действие</h1>
+<div mat-dialog-content
+     [style.overflow]="'hidden'"
+     [style.height]="'185px'">
+    <p>Вы желаете погасить пользователю <span
+            class="bold-text">{{data.person.first_name + " " + data.person.last_name}}</span> долга на:</p>
+    <mat-form-field appearance="outline">
+        <mat-label>Сумму</mat-label>
+        <input matInput [formControl]="amountControl" type="text" autocomplete="off" maxlength="25">
+        <mat-error *ngIf="amountControl.hasError('required')">
+            Поле обязательно для заполнения
+        </mat-error>
+        <mat-error *ngIf="amountControl.hasError('max')">
+            Максимальная сумма списания 999 руб.
+        </mat-error>
+        <mat-error *ngIf="amountControl.hasError('min')">
+            Минимальная сумма списания 1 руб.
+        </mat-error>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions align="end" [style.padding]="0">
+    <button mat-button mat-dialog-close>Отмена</button>
+    <button mat-button color="primary" [disabled]="amountControl.invalid" [mat-dialog-close]="amountControl.value">Да</button>
+</div>

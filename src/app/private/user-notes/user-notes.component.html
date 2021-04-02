@@ -1,45 +1,43 @@
-<div [ngClass]="{'edit-mode': mode==='EDIT'}" class="wrapper">
-  <mat-toolbar class="toolbar toolbar-with-icon">
-    <div class="title-container">
-      <button mat-icon-button (click)="mode === 'VIEW' ? moveToMainPage() : changeModeToView()">
-        <mat-icon>close</mat-icon>
-      </button>
-      <span *ngIf="mode === 'VIEW'">{{user && user.first_name}} {{user && user.last_name}}</span>
-      <span *ngIf="mode === 'EDIT'">Погасить: {{getTotalSum()}}</span>
-    </div>
-    <i *ngIf="mode === 'EDIT'" mat-ripple class="debt-icon" (click)="openConfirmDialog()"></i>
-
-  </mat-toolbar>
-  <div class="scrollable-area">
-    <cdk-virtual-scroll-viewport [itemSize]="notes.length" class="viewport">
-      <div *cdkVirtualFor="let note of notes;" class="note"
-           mat-ripple
-           [matRippleColor]="mode === 'VIEW' ? 'rgba(0,0,0,.1)' :'rgba(219, 194, 251, 0.3)'"
-           (click)="openNoteView(note)"
-           [class.negative]="note.ownerId !== me.id"
-           [class.selected]="note.selected"
-           [class.closed]="isClosedNote(note)"
-           long-press
-           (onLongPress)="changeModeToEdit(note)"
-           (onLongPressing)="onLongPressing()">
+<div class="wrapper">
+    <mat-toolbar class="toolbar toolbar-with-icon">
         <div class="title-container">
-          <i class="note-type-icon" ngClass="{{note.type + '-icon'}}"></i>
-          <div>
-            <div class="primary-text">{{note.title}}</div>
-            <div class="secondary-text">{{note.date | date}}</div>
-          </div>
+            <button mat-icon-button (click)="moveToMainPage()">
+                <mat-icon>close</mat-icon>
+            </button>
+            <span>{{user && user.first_name}} {{user && user.last_name}}</span>
         </div>
-        <div class="amount">
-          <div>{{note.ownerId !== me.id ? '-' : ''}}{{note.moneyPerPerson | money : note.ownerId === me.id ? user.id : me.id}}</div>
-          <mat-icon class="primary-text">keyboard_arrow_right</mat-icon>
+        <div class="toolbar-action">
+            <i *ngIf="canMutualWriteOff"
+               mat-ripple class="mutual-write-off" (click)="openMutualConfirmDialog()"></i>
+            <i *ngIf="hasOwnOpenedNotes"
+               mat-ripple class="debt-icon " (click)="openConfirmDialog()"></i>
         </div>
-      </div>
-    </cdk-virtual-scroll-viewport>
-  </div>
+    </mat-toolbar>
+    <div class="scrollable-area">
+        <cdk-virtual-scroll-viewport [itemSize]="notes.length" class="viewport">
+            <div *cdkVirtualFor="let note of notes;" class="note"
+                 mat-ripple
+                 (click)="openNoteView(note)"
+                 [class.negative]="note.ownerId !== me.id"
+                 [class.closed]="isClosedNote(note)">
+                <div class="title-container">
+                    <i class="note-type-icon" ngClass="{{note.type + '-icon'}}"></i>
+                    <div>
+                        <div class="primary-text">{{note.title}}</div>
+                        <div class="secondary-text">{{note.date | date}}</div>
+                    </div>
+                </div>
+                <div class="amount">
+                    <div>{{note.ownerId !== me.id ? '-' : ''}}{{note.moneyPerPerson | money : note.ownerId === me.id ? user.id : me.id}}</div>
+                    <mat-icon class="primary-text">keyboard_arrow_right</mat-icon>
+                </div>
+            </div>
+        </cdk-virtual-scroll-viewport>
+    </div>
 </div>
 <div *ngIf="loading" class="loading">
-  <mat-spinner></mat-spinner>
-  <div class="click-handler"></div>
+    <mat-spinner></mat-spinner>
+    <div class="click-handler"></div>
 </div>
 
 

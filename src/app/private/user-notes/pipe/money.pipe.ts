@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {MoneyPerPerson} from "../add-new-note/note";
+import {MoneyPerPerson} from "../../add-new-note/note";
 
 @Pipe({
   name: 'money'
