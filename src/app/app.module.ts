@@ -3,10 +3,10 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from "@angular/router";
+import {RouterModule} from '@angular/router';
 import {LoginComponent} from './public/login/login.component';
 import {MainComponent} from './private/main/main.component';
-import {AppRoutes} from "./route-config";
+import {AppRoutes} from './route-config';
 import {
     MAT_DATE_FORMATS,
     MatButtonModule,
@@ -23,19 +23,20 @@ import {
     MatSelectModule,
     MatTabsModule,
     MatToolbarModule
-} from "@angular/material";
+} from '@angular/material';
 import {BalanceComponent} from './private/balance/balance.component';
 import {AddNewNoteComponent, ErrorDialog} from './private/add-new-note/add-new-note.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {MoneyPerPersonPipe} from './private/add-new-note/money-per-person.pipe';
-import {PersonPipe} from './private/add-new-note/person.pipe';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MoneyPerPersonPipe} from './private/add-new-note/money-spreader/pipes/money-per-person.pipe';
+import {PersonPipe} from './private/add-new-note/money-spreader/pipes/person.pipe';
 import {SelectParticipantsDialog} from './private/add-new-note/dialog/select-participants/select-participants-dialog.component';
-import {ScrollingModule} from "@angular/cdk/scrolling";
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {ConfirmDialog, MutualConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
-import {DatePipe} from "./private/user-notes/pipe/date.pipe";
-import {MoneyPipe} from "./private/user-notes/pipe/money.pipe";
+import {DatePipe} from './private/user-notes/pipe/date.pipe';
+import {MoneyPipe} from './private/user-notes/pipe/money.pipe';
 import {LongPressDirective} from './directive/long-press.directive';
-import { PhotoUploaderComponent } from './private/add-new-note/photo-uploader/photo-uploader.component';
+import {PhotoUploaderComponent} from './private/add-new-note/photo-uploader/photo-uploader.component';
+import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/money-spreader.component';
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -62,7 +63,8 @@ const APP_DATE_FORMATS = {
         ConfirmDialog,
         MutualConfirmDialog,
         ErrorDialog,
-        PhotoUploaderComponent
+        PhotoUploaderComponent,
+        MoneySpreaderComponent
     ],
     imports: [
         MatButtonModule,
@@ -83,7 +85,7 @@ const APP_DATE_FORMATS = {
         ScrollingModule,
         MatRippleModule,
         MatDialogModule,
-        RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'})
+        RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
     ],
     exports: [
         MatDatepickerModule,

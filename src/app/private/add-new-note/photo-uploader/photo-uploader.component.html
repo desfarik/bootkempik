@@ -6,8 +6,6 @@
     <div *ngIf="photoUrl; else noPhoto"
          class="photo-wrapper">
         <img #photo [src]="photoUrl"
-             [style.width]="zoomPercent + 100 + '%'"
-             [style.margin-left]="-(zoomPercent/ 2) + '%'"
              [style.transform]="'rotate(' + rotateDeg + 'deg)'">
     </div>
 </div>
@@ -23,32 +21,27 @@
 
 <input #photoInput hidden type="file" accept="image/jpeg,image/png" (change)="onSelectPhoto($event)">
 
-<div *ngIf="viewMode" class="view-mode-controls top">
-    <button mat-icon-button (click)="exitFromViewMode()">
-        <mat-icon>close</mat-icon>
-    </button>
-    Просмотр изображения
-</div>
-
 <div *ngIf="viewMode" class="view-mode-controls bottom">
-    <div>
-        <button mat-icon-button (click)="zoom(+1)">
-            <mat-icon>zoom_in</mat-icon>
+    <div class="controls-container">
+        <button type="button" mat-icon-button (click)="deleteImage()">
+            <mat-icon>delete_forever</mat-icon>
         </button>
-        <button mat-icon-button (click)="zoom(-1)">
-            <mat-icon>zoom_out</mat-icon>
-        </button>
-        <button mat-icon-button class="done" (click)="exitFromViewMode()">
+        <div>
+            <button type="button" mat-icon-button (click)="photoInput.click(); reset()">
+                <mat-icon>add_a_photo</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="rotateImage(-90)">
+                <mat-icon>undo</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="rotateImage(+90)">
+                <mat-icon>redo</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="reset()">
+                <mat-icon>replay</mat-icon>
+            </button>
+        </div>
+        <button type="button" mat-icon-button class="done" (click)="exitFromViewMode()">
             <mat-icon>done</mat-icon>
-        </button>
-        <button mat-icon-button (click)="photoInput.click()">
-            <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button (click)="rotateImage(-90)">
-            <mat-icon>undo</mat-icon>
-        </button>
-        <button mat-icon-button (click)="rotateImage(+90)">
-            <mat-icon>redo</mat-icon>
         </button>
     </div>
 

@@ -11,7 +11,6 @@ export class SelectParticipantsDialog {
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any,
                 public dialogRef: MatDialogRef<SelectParticipantsDialog>) {
-        this.data.persons.forEach(person => person.selected = false);
     }
 
     get isSubmitDisabled() {

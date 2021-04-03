@@ -1,0 +1,34 @@
+<div *ngFor="let person of selectedPersons" class="selected-person">
+    <span>{{person | person}}</span>
+    <div class="center person-actions">
+
+        <mat-form-field *ngIf="person.manual"
+                        class="person-amount-container"
+                        #matInputWrapper>
+            <input matInput
+                   [value]="person.amount"
+                   (keyup)="onManualChange(person, $event, matInputWrapper)"
+                   type="number" autocomplete="off" max="999" min="1">
+        </mat-form-field>
+        <span *ngIf="!person.manual">{{person.amount}}</span>
+
+        <button class="toggle-double" type="button"
+                [class.active]="person.double"
+                mat-icon-button
+                (click)="toggleDoubleRate(person)">
+            <mat-icon>exposure_plus_1</mat-icon>
+        </button>
+        <button class="toggle-auto" type="button"
+                [class.active]="!person.manual"
+                mat-icon-button
+                (click)="toggleAutoRate(person)">
+            <mat-icon>hdr_auto</mat-icon>
+        </button>
+    </div>
+</div>
+<div class="center add-new-person">
+    <button type="button"
+            mat-stroked-button color="primary" (click)="openDialog()">
+        Выбрать
+    </button>
+</div>

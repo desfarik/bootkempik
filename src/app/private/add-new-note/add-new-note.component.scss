@@ -49,20 +49,6 @@
   pointer-events: none;
 }
 
-.selected-person {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.person-actions {
-  .mat-icon {
-    border: 2px solid;
-    font-size: 20px;
-    border-radius: 50%;
-  }
-}
-
 .amount-container {
   margin-bottom: 5px;
 
@@ -85,24 +71,10 @@
   color: rgba(0, 0, 0, 0.54);
 }
 
-.toggle-double {
-  color: rgba(0, 0, 0, 0.54);
-  margin-left: 10px;
-
-  &.active {
-    color: #673ab7;
-  }
-}
-
 .person-container:focus ::ng-deep {
   .mat-form-field-outline-thick {
     color: #673ab7;
   }
-}
-
-.add-new-person {
-  position: relative;
-  top: 25px;
 }
 
 .description {
@@ -113,7 +85,6 @@
   ::ng-deep {
     .mat-form-field-flex:hover .mat-form-field-outline {
       opacity: 1;
-
       .mat-form-field-outline-start,
       .mat-form-field-outline-gap,
       .mat-form-field-outline-end {
@@ -122,6 +93,17 @@
       }
     }
   }
+
+  &.has-error {
+    ::ng-deep {
+      .mat-form-field-outline-start,
+      .mat-form-field-outline-gap,
+      .mat-form-field-outline-end {
+        border-color: #f44336;
+      }
+    }
+  }
+
 }
 
 .disabled {

@@ -57,31 +57,15 @@
                 </div>
             </div>
 
-            <mat-form-field appearance="outline" class="person-container" [ngClass]="{'disabled':readonlyMode}">
+            <mat-form-field appearance="outline" class="person-container"
+                            [class.disabled]="readonlyMode"
+                            [class.has-error]="addNewNoteForm.controls.persons.errors && addNewNoteForm.controls.persons.errors.amountError">
                 <mat-label>Участники</mat-label>
-                <div *ngFor="let person of addNewNoteForm.controls.persons.value" class="selected-person">
-                    <span>{{person | person}}</span>
-                    <div class="center person-actions">
-                        <span>{{addNewNoteForm.controls.amount.value | moneyPerPerson : addNewNoteForm.controls.persons.value.length : person : doublePersonCount}}</span>
-                        <button [ngClass]="{'active': person.double}" class="toggle-double" type="button"
-                                mat-icon-button
-                                color="primary" (click)="toggleDoubleRate(person)">
-                            <mat-icon>exposure_plus_1</mat-icon>
-                        </button>
-                        <button *ngIf="!readonlyMode" type="button" mat-icon-button color="primary"
-                                (click)="remove(person)">
-                            <mat-icon>clear</mat-icon>
-                        </button>
-                    </div>
-                </div>
-                <div class="center add-new-person">
-                    <button
-                            [disabled]="(addNewNoteForm.controls && addNewNoteForm.controls.persons.value.length === (allPersons && allPersons.length || 0) +1)"
-                            type="button"
-                            mat-stroked-button color="primary" (click)="openDialog()">
-                        Добавить
-                    </button>
-                </div>
+                <app-money-spreader
+                        [persons]="allPersons"
+                        [amount]="addNewNoteForm.controls.amount.value"
+                        [control]="addNewNoteForm.controls.persons">
+                </app-money-spreader>
                 <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">
             </mat-form-field>
 

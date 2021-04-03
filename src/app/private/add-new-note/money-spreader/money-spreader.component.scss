@@ -1,0 +1,78 @@
+
+.selected-person {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.person-actions {
+
+  .person-amount-container {
+    max-width: 50px;
+    width: 50px;
+    text-align: right;
+
+    ::ng-deep {
+      .mat-form-field-infix {
+        width: auto;
+        padding: 0;
+      }
+
+      .mat-form-field-wrapper {
+        margin: 0;
+        padding: 0;
+      }
+
+      .mat-form-field-flex {
+        margin: 0;
+        padding: 0;
+      }
+
+      input {
+        position: relative !important;
+        top: -6px !important;
+      }
+
+      .mat-form-field-underline {
+        top: 25px;
+      }
+    }
+  }
+
+  .toggle-auto, .toggle-double {
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  .toggle-double {
+    color: rgba(0, 0, 0, 0.54);
+    margin-left: 10px;
+
+    .mat-icon {
+      border: 2px solid;
+      font-size: 20px;
+      border-radius: 50%;
+    }
+  }
+
+  .toggle-auto {
+    .mat-icon {
+      border: none;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+
+  .active {
+    color: #673ab7;
+  }
+
+
+}
+
+
+.add-new-person {
+  position: relative;
+  top: 25px;
+}

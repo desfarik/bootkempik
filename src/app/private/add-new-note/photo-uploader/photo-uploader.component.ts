@@ -23,7 +23,6 @@ export class PhotoUploaderComponent implements OnInit {
     loading = false;
     viewMode = false;
     rotateDeg = 0;
-    zoomPercent = 0;
 
     @ViewChild('photo', {static: false})
     photoElement: ElementRef<HTMLImageElement>;
@@ -72,15 +71,15 @@ export class PhotoUploaderComponent implements OnInit {
 
     rotateImage(deg) {
         this.rotateDeg += deg;
-        this.changeDetection.detectChanges();
     }
 
-    zoom(percent) {
-        if (percent < 0 && -70 > this.zoomPercent) {
-            return;
-        }
-        const dZoom = (this.zoomPercent + 100) / 3 * percent;
-        this.zoomPercent += dZoom;
+    reset() {
+        this.rotateDeg = 0;
+    }
 
+    deleteImage() {
+        this.exitFromViewMode();
+        this.reset();
+        this.photoUrl = null;
     }
 }
