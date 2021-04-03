@@ -3,6 +3,7 @@ import {User} from '../../../service/model/user';
 import {SelectParticipantsDialog} from '../dialog/select-participants/select-participants-dialog.component';
 import {MatDialog} from '@angular/material';
 import {AbstractControl} from '@angular/forms';
+import {MoneyPerPerson} from '../note';
 
 interface SelectedPerson extends User {
     selected: boolean;
@@ -23,8 +24,6 @@ export class MoneySpreaderComponent implements OnChanges {
     @Input()
     amount: string;
     @Input()
-    readonly: false;
-    @Input()
     control: AbstractControl;
     doublePersonCount = 0;
 
@@ -39,18 +38,36 @@ export class MoneySpreaderComponent implements OnChanges {
         this.calculateMoneyPerPerson();
     }
 
-    // public remove(person) {
-    //     if (!!person.double) {
-    //         this.doublePersonCount--;
-    //         person.double = false;
-    //     }
-    //     const persons = this.addNewNoteForm.controls.persons.value;
-    //     persons.splice(persons.indexOf(person), 1);
-    //     this.addNewNoteForm.controls.persons.setValue(persons);
-    // }
+
+    public setMoneyPerPerson(persons, moneyPerPersons: MoneyPerPerson[]): void {
+        this.selectedPersons = persons.map(person => {
+            const moneyPerPerson = moneyPerPersons.find(m => m.personId === person.id);
+            if (moneyPerPerson) {
+                const newPerson = {...person} as SelectedPerson;
+                newPerson.amount = moneyPerPerson.money;
+                newPerson.manual = moneyPerPerson.manual;
+                newPerson.double = moneyPerPerson.double;
+                return  newPerson;
+            }
+            return null;
+        }).filter(person => !!person);
+    }
+
+    public getMoneyPerPerson(): MoneyPerPerson[] {
+        return this.selectedPersons.map(person => {
+            return {
+                personId: person.id,
+                money: person.amount,
+                manual: person.manual,
+                double: person.double,
+            };
+        });
+    }
+
     public onManualChange(person, event, matInputWrapper) {
         if (isNaN(event.target.valueAsNumber)) {
             matInputWrapper._elementRef.nativeElement.classList.add('mat-form-field-invalid');
+            this.control.setErrors({amountError: true});
             return;
         }
         person.amount = event.target.valueAsNumber || 0;

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {User} from '../../service/model/user';
 import {AuthorizationService} from '../../service/authorization.service';
@@ -6,6 +6,7 @@ import {FirebaseService} from '../../service/firebase.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {MoneyPerPerson, Note} from './note';
 import {ActivatedRoute} from '@angular/router';
+import {MoneySpreaderComponent} from "./money-spreader/money-spreader.component";
 
 @Component({
     selector: 'app-add-new-note',
@@ -28,6 +29,9 @@ export class AddNewNoteComponent implements OnInit {
     public selectedType = this.noteTypes[0];
     public readonlyMode = false;
     public owner: User;
+
+    @ViewChild(MoneySpreaderComponent)
+    private moneySpreader: MoneySpreaderComponent;
 
     public async ngOnInit() {
         this.addNewNoteForm = this.formBuilder.group({
@@ -52,17 +56,12 @@ export class AddNewNoteComponent implements OnInit {
 
                 this.addNewNoteForm.controls.date.setValue(new Date(data.note.date));
 
-                this.addNewNoteForm.controls.persons.setValue(this.prepareMoneyPerPerson(data.note.amount, data.note.moneyPerPerson));
+                this.moneySpreader.setMoneyPerPerson(this.allPersons, data.note.moneyPerPerson);
+                this.addNewNoteForm.controls.persons.setValue(this.allPersons);
                 this.selectedType = data.note.type;
-            }
-        });
-
-        this.addNewNoteForm.statusChanges.subscribe((r) => {
-                console.log(r);
                 this.changeDetector.detectChanges();
             }
-        );
-
+        });
     }
 
     public async submit() {
@@ -77,7 +76,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.addNewNoteForm.value.amount,
                 this.me.id,
                 this.addNewNoteForm.value.description,
-                this.getMoneyPerPerson(),
+                this.moneySpreader.getMoneyPerPerson(),
                 this.addNewNoteForm.value.title,
                 this.selectedType);
             await this.fireBaseService.balanceService.addNewNote(newNote);
@@ -88,20 +87,6 @@ export class AddNewNoteComponent implements OnInit {
 
     public moveToMainPage() {
         history.back();
-    }
-
-    private getMoneyPerPerson(): MoneyPerPerson[] {
-        const moneyPerPerson = Number(this.addNewNoteForm.value.amount) / (this.addNewNoteForm.value.persons.length + this.doublePersonCount);
-        return this.addNewNoteForm.value.persons.map(person => {
-            let money = moneyPerPerson;
-            if (person.double) {
-                money += money;
-            }
-            return {
-                personId: person.id,
-                money: Number(money.toFixed(2))
-            };
-        });
     }
 
     private prepareMoneyPerPerson(amount: number, moneyPerPersons: MoneyPerPerson[]): User[] {

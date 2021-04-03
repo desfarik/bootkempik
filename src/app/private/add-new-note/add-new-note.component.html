@@ -35,7 +35,8 @@
             </div>
 
             <div class="photo-amount-date-container">
-                <app-photo-uploader class="photo-container"></app-photo-uploader>
+                <app-photo-uploader class="photo-container"
+                                    [readonly]="readonlyMode"></app-photo-uploader>
                 <div>
                     <mat-form-field appearance="outline" class="amount-container">
                         <mat-label>Сумма</mat-label>
@@ -59,7 +60,7 @@
 
             <mat-form-field appearance="outline" class="person-container"
                             [class.disabled]="readonlyMode"
-                            [class.has-error]="addNewNoteForm.controls.persons.errors && addNewNoteForm.controls.persons.errors.amountError">
+                            [class.has-error]="!!addNewNoteForm.controls.persons.errors && !!addNewNoteForm.controls.persons.errors.amountError">
                 <mat-label>Участники</mat-label>
                 <app-money-spreader
                         [persons]="allPersons"

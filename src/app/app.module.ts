@@ -27,7 +27,6 @@ import {
 import {BalanceComponent} from './private/balance/balance.component';
 import {AddNewNoteComponent, ErrorDialog} from './private/add-new-note/add-new-note.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MoneyPerPersonPipe} from './private/add-new-note/money-spreader/pipes/money-per-person.pipe';
 import {PersonPipe} from './private/add-new-note/money-spreader/pipes/person.pipe';
 import {SelectParticipantsDialog} from './private/add-new-note/dialog/select-participants/select-participants-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -53,7 +52,6 @@ const APP_DATE_FORMATS = {
         MainComponent,
         BalanceComponent,
         AddNewNoteComponent,
-        MoneyPerPersonPipe,
         PersonPipe,
         DatePipe,
         MoneyPipe,
