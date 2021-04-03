@@ -36,6 +36,7 @@ import {MoneyPipe} from './private/user-notes/pipe/money.pipe';
 import {LongPressDirective} from './directive/long-press.directive';
 import {PhotoUploaderComponent} from './private/add-new-note/photo-uploader/photo-uploader.component';
 import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/money-spreader.component';
+import {HttpClientModule} from "@angular/common/http";
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -83,6 +84,7 @@ const APP_DATE_FORMATS = {
         ScrollingModule,
         MatRippleModule,
         MatDialogModule,
+        HttpClientModule,
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
     ],
     exports: [

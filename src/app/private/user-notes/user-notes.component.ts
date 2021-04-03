@@ -8,10 +8,12 @@ import {CacheService} from '../../service/cache.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {filter, map} from 'rxjs/operators';
 import {FormControl, Validators} from '@angular/forms';
+import {NoteUpdaterService} from "./note-updater.service";
 
 @Component({
     selector: 'app-user-notes',
     templateUrl: './user-notes.component.html',
+    providers: [NoteUpdaterService],
     styleUrls: ['./user-notes.component.scss'],
 })
 export class UserNotesComponent implements OnInit {
@@ -21,6 +23,7 @@ export class UserNotesComponent implements OnInit {
                 private authorizationService: AuthorizationService,
                 private router: Router,
                 private cacheService: CacheService,
+                private noteUpdaterService: NoteUpdaterService,
                 public dialog: MatDialog) {
     }
 
@@ -111,8 +114,22 @@ export class UserNotesComponent implements OnInit {
             }
         }).afterClosed()
             .pipe(filter(Boolean))
-            .subscribe((l) => {
-                console.log(l);
+            .subscribe(async (sum: number) => {
+                this.loading = true;
+                const result = this.noteUpdaterService.getAffectedOwnerNotesIds(this.notes, sum);
+
+                const newNote = await this.firebaseService.balanceService.updateBalance(
+                    this.me.id,
+                    this.user.id,
+                    sum,
+                    result.remainder,
+                    result.affectedOwnerNotesIds);
+
+                if (newNote) {
+                    this.notes.push(newNote);
+                    this.sortNotes(this.notes);
+                }
+                this.loading = false;
             });
     }
 
@@ -127,24 +144,23 @@ export class UserNotesComponent implements OnInit {
             .pipe(
                 filter(Boolean),
                 map(Number))
-            .subscribe(async result => {
-                console.log(result);
-                return;
-                if (result) {
-                    this.loading = true;
-                    const updatedNotes = [];
-                    this.notes.forEach(note => {
-                        // if (note.selected) {
-                        //     updatedNotes.push(note);
-                        //     note.openFor?.splice(note.openFor.findIndex((userId) => userId === this.user.id), 1);
-                        // }
-                    });
-                    updatedNotes.forEach(note => note.selected = false);
-                    await this.firebaseService.updateNotes(updatedNotes);
-                    await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, total);
+            .subscribe(async sum => {
+                this.loading = true;
+                const result = this.noteUpdaterService.getAffectedBothNotesIds(this.notes, sum);
+
+                const newNote = await this.firebaseService.balanceService.mutualWriteOffBalance(
+                    this.me.id,
+                    this.user.id,
+                    sum,
+                    result.remainder,
+                    result.affectedOwnerNotesIds,
+                    result.affectedDebtNoteIds);
+
+                if (newNote) {
+                    this.notes.push(newNote);
                     this.sortNotes(this.notes);
-                    this.loading = false;
                 }
+                this.loading = false;
             });
     }
 }

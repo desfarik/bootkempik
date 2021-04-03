@@ -88,19 +88,6 @@ export class AddNewNoteComponent implements OnInit {
     public moveToMainPage() {
         history.back();
     }
-
-    private prepareMoneyPerPerson(amount: number, moneyPerPersons: MoneyPerPerson[]): User[] {
-        const result = [];
-        const moneyPerPerson = Number((amount / moneyPerPersons.length).toFixed(2));
-        moneyPerPersons.forEach(e => {
-            result.push(this.allPersons.find(person => person.id === e.personId) || this.me);
-            if (e.money > moneyPerPerson) {
-                result[result.length - 1].double = true;
-                this.doublePersonCount++;
-            }
-        });
-        return result;
-    }
 }
 
 @Component({

@@ -28,10 +28,6 @@ export class AuthorizationService {
     return !!localStorage.getItem(this.VK_TOKEN) && !!localStorage.getItem(this.USER);
   }
 
-  public static getUser(): User {
-    return JSON.parse(localStorage.getItem('user'));
-  }
-
   public saveVkTokenAndId(token, userId): void {
     localStorage.setItem(this.VK_TOKEN, token);
     localStorage.setItem(this.USER_ID, userId);
