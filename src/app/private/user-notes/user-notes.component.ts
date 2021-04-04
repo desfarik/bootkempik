@@ -8,12 +8,10 @@ import {CacheService} from '../../service/cache.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {filter, map} from 'rxjs/operators';
 import {FormControl, Validators} from '@angular/forms';
-import {NoteUpdaterService} from "./note-updater.service";
 
 @Component({
     selector: 'app-user-notes',
     templateUrl: './user-notes.component.html',
-    providers: [NoteUpdaterService],
     styleUrls: ['./user-notes.component.scss'],
 })
 export class UserNotesComponent implements OnInit {
@@ -23,7 +21,6 @@ export class UserNotesComponent implements OnInit {
                 private authorizationService: AuthorizationService,
                 private router: Router,
                 private cacheService: CacheService,
-                private noteUpdaterService: NoteUpdaterService,
                 public dialog: MatDialog) {
     }
 
@@ -66,9 +63,9 @@ export class UserNotesComponent implements OnInit {
 
     public isClosedNote(note: Note): boolean {
         if (note.ownerId === this.me.id) {
-            return !note.openFor?.includes(this.user.id);
+            return note.moneyPerPerson[this.user.id]?.paid;
         } else {
-            return !note.openFor?.includes(this.me.id);
+            return note.moneyPerPerson[this.me.id]?.paid;
         }
     }
 
@@ -77,28 +74,32 @@ export class UserNotesComponent implements OnInit {
         this.router.navigate(['/add-new-note'], {queryParams: {noteId: note.nowDate}});
     }
 
-    public getTotalSum(): number {
+    public getOpenedOwnerPositiveSum(): number {
         const total = this.notes.reduce((result, note) => {
-            if (!this.isClosedNote(note)) {
-                return result + note.moneyPerPerson.find(e => e.personId === this.user.id).money;
+            if (note.ownerId === this.me.id && !note.moneyPerPerson[this.user.id].paid) {
+                return result + note.moneyPerPerson[this.user.id].money;
             }
             return result;
         }, 0);
         return Number(total.toFixed(2));
     }
 
-    private calculateMutualSum() {
+    private calculateMutualSum(): [number, number] {
         const sums = this.notes.reduce((result, note) => {
             if (!this.isClosedNote(note)) {
                 if (note.ownerId === this.me.id) {
-                    result[0] += note.moneyPerPerson.find(e => e.personId === this.user.id).money;
+                    result[0] += note.moneyPerPerson[this.user.id].money;
                 } else {
-                    result[1] += note.moneyPerPerson.find(e => e.personId === this.me.id).money;
+                    result[1] += note.moneyPerPerson[this.me.id].money;
                 }
             }
             return result;
         }, [0, 0]);
-        return Number(Math.min(...sums).toFixed(2));
+        if (sums[0] > sums[1]) {
+            return [round(sums[1]), this.me.id];
+        } else {
+            return [round(sums[0]), this.user.id];
+        }
     }
 
     public moveToMainPage() {
@@ -106,7 +107,7 @@ export class UserNotesComponent implements OnInit {
     }
 
     public openMutualConfirmDialog() {
-        const total = this.calculateMutualSum();
+        const [total, userId] = this.calculateMutualSum();
         this.dialog.open(MutualConfirmDialog, {
             data: {
                 amount: total,
@@ -114,16 +115,9 @@ export class UserNotesComponent implements OnInit {
             }
         }).afterClosed()
             .pipe(filter(Boolean))
-            .subscribe(async (sum: number) => {
+            .subscribe(async () => {
                 this.loading = true;
-                const result = this.noteUpdaterService.getAffectedOwnerNotesIds(this.notes, sum);
-
-                const newNote = await this.firebaseService.balanceService.updateBalance(
-                    this.me.id,
-                    this.user.id,
-                    sum,
-                    result.remainder,
-                    result.affectedOwnerNotesIds);
+                const newNote = await this.firebaseService.balanceService.mutualWriteOffBalance(this.me.id, this.user.id, total, userId);
 
                 if (newNote) {
                     this.notes.push(newNote);
@@ -134,7 +128,7 @@ export class UserNotesComponent implements OnInit {
     }
 
     public openConfirmDialog() {
-        const total = this.getTotalSum();
+        const total = this.getOpenedOwnerPositiveSum();
         this.dialog.open(ConfirmDialog, {
             data: {
                 amount: total,
@@ -146,15 +140,7 @@ export class UserNotesComponent implements OnInit {
                 map(Number))
             .subscribe(async sum => {
                 this.loading = true;
-                const result = this.noteUpdaterService.getAffectedBothNotesIds(this.notes, sum);
-
-                const newNote = await this.firebaseService.balanceService.mutualWriteOffBalance(
-                    this.me.id,
-                    this.user.id,
-                    sum,
-                    result.remainder,
-                    result.affectedOwnerNotesIds,
-                    result.affectedDebtNoteIds);
+                const newNote = await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, sum);
 
                 if (newNote) {
                     this.notes.push(newNote);
@@ -187,3 +173,8 @@ export class MutualConfirmDialog {
     constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     }
 }
+
+export function round(noRoundedNumber: number): number {
+    return Number(noRoundedNumber.toFixed(2));
+}
+

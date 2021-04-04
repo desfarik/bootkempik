@@ -42,18 +42,16 @@ export class BalanceService {
         this.onUpdateAllBalance(allBalance);
     }
 
-    public async updateBalance(meId: number, debtUserId: number, sum: number, remainder: number,
-                               affectedOwnerNoteIds: string[]): Promise<Note> {
+    public async updateBalance(meId: number, debtUserId: number, sum: number): Promise<Note> {
         return await this.apiService.post<Note>(
             '/balance/update',
-            {ownerId: meId, debtUserId, sum, remainder, affectedOwnerNoteIds});
+            {ownerId: meId, debtUserId, sum});
     }
 
-    public async mutualWriteOffBalance(meId: number, debtUserId: number, sum: number, remainder: number,
-                                       affectedOwnerNoteIds: string[], affectedDebtNoteIds: string[]): Promise<Note> {
+    public async mutualWriteOffBalance(meId: number, debtUserId: number, sum: number, forUserId: number): Promise<Note> {
         return await this.apiService.post<Note>(
             '/balance/mutual-write-off',
-            {ownerId: meId, debtUserId, sum, remainder, affectedOwnerNoteIds, affectedDebtNoteIds});
+            {ownerId: meId, debtUserId, sum, forOwner: forUserId === meId});
     }
 
     private onUpdateAllBalance(updated: AllBalance) {

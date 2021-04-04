@@ -39,29 +39,30 @@ export class MoneySpreaderComponent implements OnChanges {
     }
 
 
-    public setMoneyPerPerson(persons, moneyPerPersons: MoneyPerPerson[]): void {
+    public setMoneyPerPerson(persons, moneyPerPersons: MoneyPerPerson): void {
         this.selectedPersons = persons.map(person => {
-            const moneyPerPerson = moneyPerPersons.find(m => m.personId === person.id);
+            const moneyPerPerson = moneyPerPersons[person.id];
             if (moneyPerPerson) {
                 const newPerson = {...person} as SelectedPerson;
                 newPerson.amount = moneyPerPerson.money;
                 newPerson.manual = moneyPerPerson.manual;
                 newPerson.double = moneyPerPerson.double;
-                return  newPerson;
+                return newPerson;
             }
             return null;
         }).filter(person => !!person);
     }
 
-    public getMoneyPerPerson(): MoneyPerPerson[] {
-        return this.selectedPersons.map(person => {
-            return {
-                personId: person.id,
+    public getMoneyPerPerson(): MoneyPerPerson {
+        return this.selectedPersons.reduce((result: MoneyPerPerson, person) => {
+            result[person.id] = {
                 money: person.amount,
                 manual: person.manual,
                 double: person.double,
+                paid: false,
             };
-        });
+            return result;
+        }, {});
     }
 
     public onManualChange(person, event, matInputWrapper) {

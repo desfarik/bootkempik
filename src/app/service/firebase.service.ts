@@ -22,13 +22,6 @@ export class FirebaseService {
         this.database = firebase.database(app);
         this.userService = new UserService(this.database, apiService);
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
-        this.put();
-    }
-
-    public put() {
-        this.database.ref('/bla').push({bla: 2}).then((r) => {
-            console.log(r);
-        });
     }
 
     public getAllNotes(): Promise<Note[]> {
@@ -57,10 +50,10 @@ export class FirebaseService {
         console.log(allNotes);
         return allNotes.filter(note => {
             if (note.ownerId === userId) {
-                return note.moneyPerPerson.find((moneyPerPerson: MoneyPerPerson) => moneyPerPerson.personId === userId2);
+                return !!note.moneyPerPerson[userId2];
             }
             if (note.ownerId === userId2) {
-                return note.moneyPerPerson.find((moneyPerPerson: MoneyPerPerson) => moneyPerPerson.personId === userId);
+                return !!note.moneyPerPerson[userId];
             }
             return false;
         });
