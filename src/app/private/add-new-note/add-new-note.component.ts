@@ -1,12 +1,12 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../service/model/user';
 import {AuthorizationService} from '../../service/authorization.service';
 import {FirebaseService} from '../../service/firebase.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
-import {MoneyPerPerson, Note} from './note';
+import {Note} from './note';
 import {ActivatedRoute} from '@angular/router';
-import {MoneySpreaderComponent} from "./money-spreader/money-spreader.component";
+import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
 
 @Component({
     selector: 'app-add-new-note',
@@ -28,6 +28,7 @@ export class AddNewNoteComponent implements OnInit {
     public noteTypes = ['party', 'beer', 'pizza', 'food', 'gift', 'cinema'];
     public selectedType = this.noteTypes[0];
     public readonlyMode = false;
+    public isEditableNote = false;
     public owner: User;
 
     @ViewChild(MoneySpreaderComponent)
@@ -46,21 +47,32 @@ export class AddNewNoteComponent implements OnInit {
 
         this.route.data.subscribe(async data => {
             if (data.note) {
+                const note: Note = data.note;
                 this.readonlyMode = true;
-                this.owner = await this.fireBaseService.userService.getUser(data.note.ownerId);
-                this.addNewNoteForm.controls.title.setValue(data.note.title);
+                this.owner = await this.fireBaseService.userService.getUser(note.ownerId);
+                this.addNewNoteForm.controls.title.setValue(note.title);
 
-                this.addNewNoteForm.controls.amount.setValue(data.note.amount);
+                this.addNewNoteForm.controls.amount.setValue(note.amount);
 
-                this.addNewNoteForm.controls.description.setValue(data.note.description);
+                this.addNewNoteForm.controls.description.setValue(note.description);
 
-                this.addNewNoteForm.controls.date.setValue(new Date(data.note.date));
+                this.addNewNoteForm.controls.date.setValue(new Date(note.date));
 
-                this.moneySpreader.setMoneyPerPerson(this.allPersons, data.note.moneyPerPerson);
+                this.moneySpreader.setMoneyPerPerson(this.allPersons, note.moneyPerPerson);
                 this.addNewNoteForm.controls.persons.setValue(this.allPersons);
-                this.selectedType = data.note.type;
+                this.selectedType = note.type;
+                this.isEditableNote = note.type !== 'mutual' && !this.isAnyPaid(note);
                 this.changeDetector.detectChanges();
             }
+        });
+    }
+
+    private isAnyPaid(note: Note): boolean {
+        return !!Object.entries(note.moneyPerPerson).find(([userId, moneyPerPerson]) => {
+            if (Number(userId) === this.owner.id) {
+                return false;
+            }
+            return moneyPerPerson.paid;
         });
     }
 
@@ -79,7 +91,11 @@ export class AddNewNoteComponent implements OnInit {
                 this.moneySpreader.getMoneyPerPerson(),
                 this.addNewNoteForm.value.title,
                 this.selectedType);
-            await this.fireBaseService.balanceService.addNewNote(newNote);
+            if (this.isEditableNote) {
+                await this.fireBaseService.balanceService.updateNote(this.route.snapshot.queryParams.noteId, newNote);
+            } else {
+                await this.fireBaseService.balanceService.addNewNote(newNote);
+            }
             this.loading = false;
             this.moveToMainPage();
         }

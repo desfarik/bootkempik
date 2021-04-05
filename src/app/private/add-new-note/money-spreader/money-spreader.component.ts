@@ -24,6 +24,8 @@ export class MoneySpreaderComponent implements OnChanges {
     @Input()
     amount: string;
     @Input()
+    readonly: boolean;
+    @Input()
     control: AbstractControl;
     doublePersonCount = 0;
 

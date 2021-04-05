@@ -42,14 +42,14 @@ export class BalanceService {
         this.onUpdateAllBalance(allBalance);
     }
 
-    public async updateBalance(meId: number, debtUserId: number, sum: number): Promise<Note> {
-        return await this.apiService.post<Note>(
+    public async updateBalance(meId: number, debtUserId: number, sum: number): Promise<UpdateBalanceResult> {
+        return await this.apiService.post<UpdateBalanceResult>(
             '/balance/update',
             {ownerId: meId, debtUserId, sum});
     }
 
-    public async mutualWriteOffBalance(meId: number, debtUserId: number, sum: number, forUserId: number): Promise<Note> {
-        return await this.apiService.post<Note>(
+    public async mutualWriteOffBalance(meId: number, debtUserId: number, sum: number, forUserId: number): Promise<UpdateBalanceResult> {
+        return await this.apiService.post<UpdateBalanceResult>(
             '/balance/mutual-write-off',
             {ownerId: meId, debtUserId, sum, forOwner: forUserId === meId});
     }
@@ -59,6 +59,13 @@ export class BalanceService {
         this.saveLocalAllBalance(updated);
         this.cacheService.evictAll();
     }
+}
+
+export interface UpdateBalanceResult {
+    note: Note;
+    noteId: string;
+    ownerClosedNoteIds: string[];
+    debtClosedNoteIds: string[];
 }
 
 

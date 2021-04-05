@@ -2,7 +2,7 @@
     <span>{{person | person}}</span>
     <div class="center person-actions">
 
-        <mat-form-field *ngIf="person.manual"
+        <mat-form-field *ngIf="person.manual && !readonly"
                         class="person-amount-container"
                         #matInputWrapper>
             <input matInput
@@ -10,7 +10,7 @@
                    (keyup)="onManualChange(person, $event, matInputWrapper)"
                    type="number" autocomplete="off" max="999" min="1">
         </mat-form-field>
-        <span *ngIf="!person.manual">{{person.amount}}</span>
+        <span *ngIf="!person.manual || readonly">{{person.amount}}</span>
 
         <button class="toggle-double" type="button"
                 [class.active]="person.double"
@@ -26,7 +26,7 @@
         </button>
     </div>
 </div>
-<div class="center add-new-person">
+<div class="center add-new-person" *ngIf="!readonly">
     <button type="button"
             mat-stroked-button color="primary" (click)="openDialog()">
         Выбрать

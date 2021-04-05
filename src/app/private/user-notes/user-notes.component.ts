@@ -1,18 +1,19 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Note} from '../add-new-note/note';
+import {AllNotes, Note} from '../add-new-note/note';
 import {User} from '../../service/model/user';
 import {FirebaseService} from '../../service/firebase.service';
 import {AuthorizationService} from '../../service/authorization.service';
 import {CacheService} from '../../service/cache.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
-import {filter, map} from 'rxjs/operators';
+import {filter, finalize, map, tap} from 'rxjs/operators';
 import {FormControl, Validators} from '@angular/forms';
 
 @Component({
     selector: 'app-user-notes',
     templateUrl: './user-notes.component.html',
     styleUrls: ['./user-notes.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserNotesComponent implements OnInit {
 
@@ -21,10 +22,12 @@ export class UserNotesComponent implements OnInit {
                 private authorizationService: AuthorizationService,
                 private router: Router,
                 private cacheService: CacheService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private changeDetector: ChangeDetectorRef) {
     }
 
     public notes: Note[] = [];
+    public userAllNotes: AllNotes;
     public user: User;
     public me: User;
     public loading = false;
@@ -36,7 +39,9 @@ export class UserNotesComponent implements OnInit {
         this.route.queryParams.subscribe(async (params) => {
             this.user = await this.firebaseService.userService.getUser(params.userId);
             this.route.data.subscribe(data => {
-                this.sortNotes(data.userNotes);
+                this.userAllNotes = data.userNotes;
+                this.sortNotes(Object.values(this.userAllNotes));
+                this.changeDetector.detectChanges();
             });
         });
     }
@@ -44,6 +49,7 @@ export class UserNotesComponent implements OnInit {
     private sortNotes(userNotes: Note[]) {
         const closedNotes = [];
         const openedNotes = [];
+        this.hasOwnOpenedNotes = this.canMutualWriteOff = false;
         userNotes.sort((a, b) => b.date - a.date)
             .forEach(note => {
                 if (this.isClosedNote(note)) {
@@ -52,10 +58,11 @@ export class UserNotesComponent implements OnInit {
                     openedNotes.push(note);
                 }
             });
-        if (openedNotes.length !== openedNotes.filter((note: Note) => note.ownerId === this.me.id).length) {
+        const myOpenedNotes = openedNotes.filter((note: Note) => note.ownerId === this.me.id).length;
+        if (openedNotes.length !== myOpenedNotes && myOpenedNotes !== 0) {
             this.canMutualWriteOff = true;
         }
-        if (openedNotes.filter((note: Note) => note.ownerId === this.me.id).length > 0) {
+        if (myOpenedNotes > 0) {
             this.hasOwnOpenedNotes = true;
         }
         this.notes = [...openedNotes, ...closedNotes];
@@ -69,9 +76,10 @@ export class UserNotesComponent implements OnInit {
         }
     }
 
-    public openNoteView(note: Note) {
-        this.cacheService.setValue(note.nowDate.toString(), note);
-        this.router.navigate(['/add-new-note'], {queryParams: {noteId: note.nowDate}});
+    public openNoteView(noteToOpen: Note) {
+        const noteId = Object.entries(this.userAllNotes).find(([, note]) => note === noteToOpen)[0];
+        this.cacheService.setValue(noteId, noteToOpen);
+        this.router.navigate(['/add-new-note'], {queryParams: {noteId}});
     }
 
     public getOpenedOwnerPositiveSum(): number {
@@ -114,16 +122,19 @@ export class UserNotesComponent implements OnInit {
                 person: this.user
             }
         }).afterClosed()
-            .pipe(filter(Boolean))
+            .pipe(
+                filter(Boolean),
+                tap(this.showSpinner))
             .subscribe(async () => {
-                this.loading = true;
-                const newNote = await this.firebaseService.balanceService.mutualWriteOffBalance(this.me.id, this.user.id, total, userId);
-
-                if (newNote) {
-                    this.notes.push(newNote);
-                    this.sortNotes(this.notes);
+                const result = await this.firebaseService.balanceService.mutualWriteOffBalance(this.me.id, this.user.id, total, userId);
+                const {note, noteId, ownerClosedNoteIds, debtClosedNoteIds} = result;
+                ownerClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.user.id].paid = true);
+                debtClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.me.id].paid = true);
+                if (note) {
+                    this.userAllNotes[noteId] = note;
                 }
-                this.loading = false;
+                this.sortNotes(Object.values(this.userAllNotes));
+                this.hideSpinner();
             });
     }
 
@@ -137,17 +148,28 @@ export class UserNotesComponent implements OnInit {
         }).afterClosed()
             .pipe(
                 filter(Boolean),
-                map(Number))
+                map(Number),
+                tap(this.showSpinner))
             .subscribe(async sum => {
-                this.loading = true;
-                const newNote = await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, sum);
-
-                if (newNote) {
-                    this.notes.push(newNote);
-                    this.sortNotes(this.notes);
+                const result = await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, sum);
+                const {note, noteId, ownerClosedNoteIds} = result;
+                ownerClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.user.id].paid = true);
+                if (note) {
+                    this.userAllNotes[noteId] = note;
                 }
-                this.loading = false;
+                this.sortNotes(Object.values(this.userAllNotes));
+                this.hideSpinner();
             });
+    }
+
+    private showSpinner = () => {
+        this.loading = true;
+        this.changeDetector.detectChanges();
+    }
+
+    private hideSpinner = () => {
+        this.loading = false;
+        this.changeDetector.detectChanges();
     }
 }
 

@@ -40,11 +40,11 @@ export class UserService {
         return copy(Array.from(this.allUsers.values()));
     }
 
-    public async getUser(userId: string): Promise<User> {
+    public async getUser(userId: string | number): Promise<User> {
         if (this.allUsers.size === 0) {
             await this.loadAllUsers();
         }
-        return copy(this.allUsers.get(parseInt(userId)));
+        return copy(this.allUsers.get(Number(userId)));
     }
 }
 

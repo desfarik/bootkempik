@@ -11,6 +11,10 @@
                 (click)="submitButton.click()">
             <mat-icon>done</mat-icon>
         </button>
+        <button *ngIf="readonlyMode && isEditableNote" class="edit-button" mat-icon-button
+                (click)="readonlyMode = false">
+            <mat-icon>edit</mat-icon>
+        </button>
     </mat-toolbar>
     <div class="scrollable-area">
         <div *ngIf="loading" class="loading">
@@ -65,7 +69,8 @@
                 <app-money-spreader
                         [persons]="allPersons"
                         [amount]="addNewNoteForm.controls.amount.value"
-                        [control]="addNewNoteForm.controls.persons">
+                        [control]="addNewNoteForm.controls.persons"
+                        [readonly]="readonlyMode">
                 </app-money-spreader>
                 <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">
             </mat-form-field>

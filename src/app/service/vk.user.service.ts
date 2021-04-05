@@ -1,6 +1,6 @@
-import {Injectable} from "@angular/core";
-import {AuthorizationService} from "./authorization.service";
-import {User} from "./model/user";
+import {Injectable} from '@angular/core';
+import {AuthorizationService} from './authorization.service';
+import {User} from './model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +24,14 @@ export class VkUserService {
 
   private send(method: string, args: string) {
     return new Promise(((resolve) => {
+      // tslint:disable-next-line:max-line-length
       this.jsonp(`https://api.vk.com/method/${method}?${args}&access_token=${AuthorizationService.getVkToken()}&v=5.95`, result => resolve(result.response));
     }));
   }
 
   private jsonp(url, callback) {
     const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-    window[callbackName] = function (data) {
+    window[callbackName] = function(data) {
       delete window[callbackName];
       document.body.removeChild(script);
       callback(data);
@@ -43,6 +44,6 @@ export class VkUserService {
 }
 
 export interface IList<T> {
-  count: number,
-  items: T[]
+  count: number;
+  items: T[];
 }

@@ -21,8 +21,5 @@ export interface MoneyPerPerson {
 }
 
 export interface AllNotes {
-    // @ts-ignore
-    lastUpdateDate: number;
-
-    [id: string]: Note;
+    [key: string]: Note;
 }

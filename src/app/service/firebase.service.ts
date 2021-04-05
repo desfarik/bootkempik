@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import '@firebase/database';
-import firebase from '../../../node_modules/firebase';
+import firebase from 'firebase/app';
 import {UserService} from './user.service';
 import {firebaseConfig} from '../../../firebase.config';
-import {MoneyPerPerson, Note} from '../private/add-new-note/note';
+import {AllNotes} from '../private/add-new-note/note';
 import {BalanceService} from './balance.service';
 import {CacheService} from './cache.service';
 import {ApiService} from './api.service';
@@ -14,8 +14,7 @@ import {ApiService} from './api.service';
 export class FirebaseService {
     public userService: UserService;
     public balanceService: BalanceService;
-    private database: firebase.database.Database;
-    private cachedNotesSnapshot: any;
+    private readonly database: firebase.database.Database;
 
     constructor(cacheService: CacheService, private apiService: ApiService) {
         const app = firebase.initializeApp(firebaseConfig);
@@ -24,38 +23,23 @@ export class FirebaseService {
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
     }
 
-    public getAllNotes(): Promise<Note[]> {
-        return this.database.ref('/notes').once('value').then(snapshot => {
-            this.cachedNotesSnapshot = snapshot.val();
-            return (Object.values(this.cachedNotesSnapshot) as Note[]);
-        });
-    }
-
-
-    public async updateNotes(notes: Note[]): Promise<void> {
-        const entries = Object.entries(this.cachedNotesSnapshot);
-        const promises = [];
-        for (let index = 0; index < entries.length; index++) {
-            const [key, note] = entries[index];
-            const updatedNote = notes.find(n => n.nowDate === (note as Note).nowDate);
-            if (updatedNote) {
-                promises.push(this.database.ref(`/notes/${key}`).set(updatedNote));
-            }
-        }
-        await Promise.all(promises);
-    }
-
-    public async getUserNotes(userId: number, userId2: number): Promise<Note[]> {
+    public async getUserNotes(userId: number, userId2: number): Promise<AllNotes> {
         const allNotes = await this.getAllNotes();
-        console.log(allNotes);
-        return allNotes.filter(note => {
-            if (note.ownerId === userId) {
-                return !!note.moneyPerPerson[userId2];
+        const userAllNotes = {};
+        Object.entries(allNotes).forEach(([noteId, note]) => {
+            if (note.ownerId === userId && note.moneyPerPerson[userId2]) {
+                userAllNotes[noteId] = {...note};
             }
-            if (note.ownerId === userId2) {
-                return !!note.moneyPerPerson[userId];
+            if (note.ownerId === userId2 && note.moneyPerPerson[userId]) {
+                userAllNotes[noteId] = {...note};
             }
-            return false;
+        });
+        return userAllNotes;
+    }
+
+    private getAllNotes(): Promise<AllNotes> {
+        return this.database.ref('/notes').once('value').then(snapshot => {
+            return snapshot.val() as AllNotes;
         });
     }
 }
