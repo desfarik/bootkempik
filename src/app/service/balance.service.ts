@@ -54,6 +54,10 @@ export class BalanceService {
             {ownerId: meId, debtUserId, sum, forOwner: forUserId === meId});
     }
 
+    public reset(): Promise<void> {
+        return this.apiService.get('/reset');
+    }
+
     private onUpdateAllBalance(updated: AllBalance) {
         this.onAllBalanceUpdate.next(updated);
         this.saveLocalAllBalance(updated);

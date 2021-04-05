@@ -36,7 +36,9 @@ import {MoneyPipe} from './private/user-notes/pipe/money.pipe';
 import {LongPressDirective} from './directive/long-press.directive';
 import {PhotoUploaderComponent} from './private/add-new-note/photo-uploader/photo-uploader.component';
 import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/money-spreader.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -86,6 +88,12 @@ const APP_DATE_FORMATS = {
         MatDialogModule,
         HttpClientModule,
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the app is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        }),
     ],
     exports: [
         MatDatepickerModule,

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import '@firebase/database';
 import firebase from 'firebase/app';
+import 'firebase/database';
 import {UserService} from './user.service';
 import {firebaseConfig} from '../../../firebase.config';
 import {AllNotes} from '../private/add-new-note/note';
@@ -17,8 +17,8 @@ export class FirebaseService {
     private readonly database: firebase.database.Database;
 
     constructor(cacheService: CacheService, private apiService: ApiService) {
-        const app = firebase.initializeApp(firebaseConfig);
-        this.database = firebase.database(app);
+        firebase.initializeApp(firebaseConfig);
+        this.database = firebase.database();
         this.userService = new UserService(this.database, apiService);
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
     }
