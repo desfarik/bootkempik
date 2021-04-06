@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {Note} from './note';
 import {ActivatedRoute} from '@angular/router';
 import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
+import {isAutoNote} from "../user-notes/note.enum";
 
 @Component({
     selector: 'app-add-new-note',
@@ -61,7 +62,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.moneySpreader.setMoneyPerPerson(this.allPersons, note.moneyPerPerson);
                 this.addNewNoteForm.controls.persons.setValue(this.allPersons);
                 this.selectedType = note.type;
-                this.isEditableNote = note.type !== 'mutual' && !this.isAnyPaid(note);
+                this.isEditableNote = !isAutoNote(note) && !this.isAnyPaid(note);
                 this.changeDetector.detectChanges();
             }
         });

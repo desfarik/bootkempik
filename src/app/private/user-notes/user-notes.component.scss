@@ -6,17 +6,17 @@
     display: flex;
     justify-content: space-between;
 
-    .debt-icon, .mutual-write-off {
+    .debt-icon, .mutual-icon {
       border-radius: 50%;
       width: 44px;
       height: 44px;
     }
 
-    .mutual-write-off {
+    .mutual-icon {
       margin-right: 20px;
     }
 
-    .mutual-write-off:before {
+    .mutual-icon:before {
       margin-left: 4px;
       margin-top: 9px;
     }

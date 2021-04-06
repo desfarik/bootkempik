@@ -177,17 +177,8 @@ mat-tab-body {
   background: url("assets/dollar.svg");
 }
 
-.mutual-write-off:before {
-  @extend .note-icon;
-  background: url("assets/hand-shake.svg");
-}
-
-.debt-remainder-icon:before {
+.remainder-icon:before {
   @extend .note-icon;
   background: url("assets/remainer.svg");
 }
 
-.mutual-remainder-icon:before {
-  @extend .note-icon;
-  background: url("assets/remainer.svg");
-}
