@@ -82,7 +82,10 @@
 
             <mat-form-field appearance="outline">
                 <mat-label>Описание</mat-label>
+                <div *ngIf="readonlyMode"
+                     class="readonly-description">{{description.value.trim()}}</div>
                 <textarea matInput formControlName="description" #description class="description"
+                          [hidden]="readonlyMode"
                           maxlength="96"></textarea>
                 <mat-hint align="end">{{description.value.length}} / 96</mat-hint>
             </mat-form-field>

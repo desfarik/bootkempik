@@ -22,7 +22,7 @@ export class MainComponent implements OnInit {
                 swUpdate: SwUpdate) {
         swUpdate.available.subscribe((event) => {
             console.log(event);
-        })
+        });
     }
 
     async ngOnInit() {

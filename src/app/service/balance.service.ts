@@ -66,10 +66,12 @@ export class BalanceService {
 }
 
 export interface UpdateBalanceResult {
-    note: Note;
-    noteId: string;
+    newNotes: UpdateNotes;
     ownerClosedNoteIds: string[];
     debtClosedNoteIds: string[];
 }
 
+export interface UpdateNotes {
+    [key: string]: Note;
+}
 

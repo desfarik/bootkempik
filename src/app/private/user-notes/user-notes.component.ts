@@ -127,12 +127,14 @@ export class UserNotesComponent implements OnInit {
                 tap(this.showSpinner))
             .subscribe(async () => {
                 const result = await this.firebaseService.balanceService.mutualWriteOffBalance(this.me.id, this.user.id, total, userId);
-                const {note, noteId, ownerClosedNoteIds, debtClosedNoteIds} = result;
+                const {newNotes, ownerClosedNoteIds, debtClosedNoteIds} = result;
                 ownerClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.user.id].paid = true);
                 debtClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.me.id].paid = true);
-                if (note) {
+
+                Object.entries(newNotes).forEach(([noteId, note]) => {
                     this.userAllNotes[noteId] = note;
-                }
+                });
+
                 this.sortNotes(Object.values(this.userAllNotes));
                 this.hideSpinner();
             });
@@ -152,11 +154,13 @@ export class UserNotesComponent implements OnInit {
                 tap(this.showSpinner))
             .subscribe(async sum => {
                 const result = await this.firebaseService.balanceService.updateBalance(this.me.id, this.user.id, sum);
-                const {note, noteId, ownerClosedNoteIds} = result;
+                const {newNotes, ownerClosedNoteIds} = result;
                 ownerClosedNoteIds.forEach(closedNoteId => this.userAllNotes[closedNoteId].moneyPerPerson[this.user.id].paid = true);
-                if (note) {
+
+                Object.entries(newNotes).forEach(([noteId, note]) => {
                     this.userAllNotes[noteId] = note;
-                }
+                });
+
                 this.sortNotes(Object.values(this.userAllNotes));
                 this.hideSpinner();
             });

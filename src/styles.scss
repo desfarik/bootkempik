@@ -33,6 +33,7 @@ div[style*="width: 80%;"] {
 body, html {
   overflow: hidden;
 }
+
 .wrapper {
   background: white;
 }
@@ -60,6 +61,7 @@ mat-tab-body {
   bottom: 0;
   top: 0;
   z-index: 500;
+
   .click-handler {
     position: absolute;
     left: 0;
@@ -70,6 +72,7 @@ mat-tab-body {
     z-index: -1;
     opacity: 0.15;
   }
+
   .mat-progress-spinner circle, .mat-spinner circle {
     //stroke: #8bc34a;
   }
@@ -85,6 +88,7 @@ mat-tab-body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
   mat-icon {
     font-size: 170px;
     height: 170px;
@@ -92,6 +96,7 @@ mat-tab-body {
     margin-top: -60px;
     color: #7cb342;
   }
+
   text-align: center;
   line-height: 24px;
 }
@@ -123,13 +128,13 @@ mat-tab-body {
   display: block;
   width: 36px;
   height: 36px;
-  background-size: 36px!important;
+  background-size: 36px !important;
 }
 
 .note-icon.note-icon-32px:before {
   width: 32px;
   height: 32px;
-  background-size: 32px!important;
+  background-size: 32px !important;
 }
 
 .beer-icon:before {
@@ -164,7 +169,7 @@ mat-tab-body {
 
 .mutual-icon:before {
   @extend .note-icon;
-  background: url("assets/scale.svg");
+  background: url("assets/hand-shake.svg");
 }
 
 .debt-icon:before {
@@ -175,5 +180,14 @@ mat-tab-body {
 .mutual-write-off:before {
   @extend .note-icon;
   background: url("assets/hand-shake.svg");
+}
 
+.debt-remainder-icon:before {
+  @extend .note-icon;
+  background: url("assets/remainer.svg");
+}
+
+.mutual-remainder-icon:before {
+  @extend .note-icon;
+  background: url("assets/remainer.svg");
 }
