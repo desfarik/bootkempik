@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {User} from "../../service/model/user";
 import {VkUserService} from "../../service/vk.user.service";
 import {FirebaseService} from "../../service/firebase.service";
+import {SwUpdate} from "@angular/service-worker";
 
 @Component({
     selector: 'app-main',
@@ -17,7 +18,11 @@ export class MainComponent implements OnInit {
     constructor(private authorizationService: AuthorizationService,
                 private router: Router,
                 private vkUserService: VkUserService,
-                private firebaseService: FirebaseService) {
+                private firebaseService: FirebaseService,
+                swUpdate: SwUpdate) {
+        swUpdate.available.subscribe((event) => {
+            console.log(event);
+        })
     }
 
     async ngOnInit() {

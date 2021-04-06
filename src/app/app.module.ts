@@ -37,8 +37,8 @@ import {LongPressDirective} from './directive/long-press.directive';
 import {PhotoUploaderComponent} from './private/add-new-note/photo-uploader/photo-uploader.component';
 import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/money-spreader.component';
 import {HttpClientModule} from '@angular/common/http';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},

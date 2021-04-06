@@ -1,9 +1,20 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges
+} from '@angular/core';
 import {User} from '../../../service/model/user';
 import {SelectParticipantsDialog} from '../dialog/select-participants/select-participants-dialog.component';
 import {MatDialog} from '@angular/material';
 import {AbstractControl} from '@angular/forms';
 import {MoneyPerPerson} from '../note';
+import {OutputEmitter} from "@angular/compiler/src/output/abstract_emitter";
+import {EventEmitter} from "events";
+import {round} from "../../user-notes/user-notes.component";
 
 interface SelectedPerson extends User {
     selected: boolean;
@@ -27,6 +38,8 @@ export class MoneySpreaderComponent implements OnChanges {
     readonly: boolean;
     @Input()
     control: AbstractControl;
+    @Input()
+    amountControl: AbstractControl;
     doublePersonCount = 0;
 
 
@@ -68,17 +81,16 @@ export class MoneySpreaderComponent implements OnChanges {
     }
 
     public onManualChange(person, event, matInputWrapper) {
-        if (isNaN(event.target.valueAsNumber)) {
+        if (isNaN(event.target.valueAsNumber) || event.target.valueAsNumber === 0) {
             matInputWrapper._elementRef.nativeElement.classList.add('mat-form-field-invalid');
             this.control.setErrors({amountError: true});
             return;
         }
+        this.control.setErrors(null);
+        matInputWrapper._elementRef.nativeElement.classList.remove('mat-form-field-invalid');
+
         person.amount = event.target.valueAsNumber || 0;
-        if (!this.calculateMoneyPerPerson()) {
-            matInputWrapper._elementRef.nativeElement.classList.add('mat-form-field-invalid');
-        } else {
-            matInputWrapper._elementRef.nativeElement.classList.remove('mat-form-field-invalid');
-        }
+        this.calculateMoneyPerPerson();
     }
 
     public toggleDoubleRate(person) {
@@ -119,20 +131,21 @@ export class MoneySpreaderComponent implements OnChanges {
         });
     }
 
-    private calculateMoneyPerPerson(): boolean {
-        if (!this.amount) {
+    private calculateMoneyPerPerson(): void {
+        if (!this.amount || this.selectedPersons.length === 0) {
             return;
         }
-        const manualAmount = this.selectedPersons.reduce((result, person) => {
+
+        const manualAmount = round(this.selectedPersons.reduce((result, person) => {
             if (person.manual) {
                 return result + (person.amount || 0);
             }
             return result;
-        }, 0);
+        }, 0));
 
         const remainder = Number(this.amount) - manualAmount;
         if (remainder < 0) {
-            this.control.setErrors({amountError: true});
+            this.amountControl.setErrors({manualAmountError: this.calculateAmount().toString()});
             return;
         }
         const autoPersonQuantity = this.selectedPersons.reduce((result, person) => {
@@ -148,7 +161,24 @@ export class MoneySpreaderComponent implements OnChanges {
                 person.amount = Number(amount.toFixed(2));
             }
         });
-        this.control.setErrors(null);
-        return true;
+
+        const calculatedAmount = this.calculateAmount();
+
+        if (calculatedAmount !== 0 && calculatedAmount !== Number(this.amount)) {
+            this.amountControl.setErrors({manualAmountError: calculatedAmount.toString()});
+            return;
+        }
+
+        this.amountControl.setErrors(null);
+        this.amountControl.updateValueAndValidity();
+
+        return;
+    }
+
+    private calculateAmount() {
+        const calculatedAmount = round(this.selectedPersons.reduce((result, person) => {
+            return result + (person.amount || 0);
+        }, 0));
+        return calculatedAmount;
     }
 }

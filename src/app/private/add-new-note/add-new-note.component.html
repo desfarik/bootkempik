@@ -49,6 +49,10 @@
                                 *ngIf="addNewNoteForm.controls.amount.hasError('min') || addNewNoteForm.controls.amount.hasError('max')">
                             Размер суммы должен быть между 1 и 999 рублей
                         </mat-error>
+                        <mat-error
+                                *ngIf="addNewNoteForm.controls.amount.hasError('manualAmountError')">
+                            Сумма не равна сумме участников: {{addNewNoteForm.controls.amount.errors.manualAmountError}}
+                        </mat-error>
                         <div matSuffix class="amount-icon">Br</div>
                     </mat-form-field>
 
@@ -70,6 +74,7 @@
                         [persons]="allPersons"
                         [amount]="addNewNoteForm.controls.amount.value"
                         [control]="addNewNoteForm.controls.persons"
+                        [amountControl]="addNewNoteForm.controls.amount"
                         [readonly]="readonlyMode">
                 </app-money-spreader>
                 <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">

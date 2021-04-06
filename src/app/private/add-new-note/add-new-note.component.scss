@@ -53,13 +53,17 @@
 }
 
 .amount-container {
-  margin-bottom: 5px;
+  margin-bottom: 12px;
 
   ::ng-deep {
     .mat-form-field-suffix {
       position: relative;
       top: -4px;
       right: 5px;
+    }
+
+    .mat-error {
+      margin-right: -15px;
     }
   }
 }
@@ -86,6 +90,11 @@
 
 .person-container {
   ::ng-deep {
+
+    mat-label {
+      background: white !important;
+    }
+
     .mat-form-field-flex:hover .mat-form-field-outline {
       opacity: 1;
 
@@ -146,7 +155,7 @@
     min-width: 140px;
     max-width: 140px;
     margin: 4px 16px 25px 0px;
-    height: 153px;
+    height: 160px;
   }
 
   ::ng-deep {
