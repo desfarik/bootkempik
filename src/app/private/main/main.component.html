@@ -3,7 +3,7 @@
   <button mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
-  <button class="add-new-note" routerLink="/add-new-note" routerLinkActive="active" mat-fab
+  <button *ngIf="!statusAppService.isErrorMode" class="add-new-note" routerLink="/add-new-note" routerLinkActive="active" mat-fab
           aria-label="Example icon-button with a heart icon">
     <mat-icon>add</mat-icon>
   </button>

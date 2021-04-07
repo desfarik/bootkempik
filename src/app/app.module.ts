@@ -39,6 +39,7 @@ import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/mone
 import {HttpClientModule} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import { NoteDescriptionPipe } from './private/add-new-note/money-spreader/pipes/note-description.pipe';
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -65,7 +66,8 @@ const APP_DATE_FORMATS = {
         MutualConfirmDialog,
         ErrorDialog,
         PhotoUploaderComponent,
-        MoneySpreaderComponent
+        MoneySpreaderComponent,
+        NoteDescriptionPipe
     ],
     imports: [
         MatButtonModule,
@@ -91,8 +93,8 @@ const APP_DATE_FORMATS = {
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,
           // Register the ServiceWorker as soon as the app is stable
-          // or after 30 seconds (whichever comes first).
-          registrationStrategy: 'registerWhenStable:30000'
+          // or after 5 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:5000'
         }),
     ],
     exports: [

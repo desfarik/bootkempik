@@ -15,6 +15,7 @@ import {MoneyPerPerson} from '../note';
 import {OutputEmitter} from "@angular/compiler/src/output/abstract_emitter";
 import {EventEmitter} from "events";
 import {round} from "../../user-notes/user-notes.component";
+import set = Reflect.set;
 
 interface SelectedPerson extends User {
     selected: boolean;
@@ -101,9 +102,15 @@ export class MoneySpreaderComponent implements OnChanges {
         this.calculateMoneyPerPerson();
     }
 
-    public toggleAutoRate(person) {
+    public toggleAutoRate(person, inputContainer: HTMLElement) {
         person.manual = !person.manual;
         person.double = false;
+        if (person.manual) {
+            setTimeout(() => {
+                const input = inputContainer.getElementsByTagName('input').item(0);
+                input.focus();
+            }, 10);
+        }
         this.calculateMoneyPerPerson();
     }
 

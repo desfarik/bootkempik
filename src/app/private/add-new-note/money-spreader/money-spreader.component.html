@@ -1,6 +1,6 @@
 <div *ngFor="let person of selectedPersons" class="selected-person">
     <span>{{person | person}}</span>
-    <div class="center person-actions">
+    <div class="center person-actions" #inputContainer>
 
         <mat-form-field *ngIf="person.manual && !readonly"
                         class="person-amount-container"
@@ -21,7 +21,7 @@
         <button class="toggle-auto" type="button"
                 [class.active]="!person.manual"
                 mat-icon-button
-                (click)="toggleAutoRate(person)">
+                (click)="toggleAutoRate(person, inputContainer)">
             <mat-icon>hdr_auto</mat-icon>
         </button>
     </div>

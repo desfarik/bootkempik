@@ -1,9 +1,10 @@
 {
   "name": "bootkempik",
-  "version": "0.0.0",
+  "version": "1.1.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "prebuild": "npm --no-git-tag-version version patch",
     "build": "ng build --configuration=production",
     "deploy": "ng build --configuration=production && firebase deploy --only hosting",
     "analyze": "ng build --configuration=production  --statsJson=true && npx webpack-bundle-analyzer ./dist/stats.json",

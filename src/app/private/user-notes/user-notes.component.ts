@@ -6,8 +6,9 @@ import {FirebaseService} from '../../service/firebase.service';
 import {AuthorizationService} from '../../service/authorization.service';
 import {CacheService} from '../../service/cache.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
-import {filter, finalize, map, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {FormControl, Validators} from '@angular/forms';
+import {StatusAppService} from "../../service/status-app.service";
 
 @Component({
     selector: 'app-user-notes',
@@ -23,6 +24,7 @@ export class UserNotesComponent implements OnInit {
                 private router: Router,
                 private cacheService: CacheService,
                 public dialog: MatDialog,
+                public statusAppService: StatusAppService,
                 private changeDetector: ChangeDetectorRef) {
     }
 

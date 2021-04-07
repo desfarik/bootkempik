@@ -6,7 +6,7 @@
             </button>
             <span>{{user && user.first_name}} {{user && user.last_name}}</span>
         </div>
-        <div class="toolbar-action">
+        <div class="toolbar-action" *ngIf="!statusAppService.isErrorMode">
             <i *ngIf="canMutualWriteOff"
                mat-ripple class="mutual-icon" (click)="openMutualConfirmDialog()"></i>
             <i *ngIf="hasOwnOpenedNotes"
@@ -14,7 +14,7 @@
         </div>
     </mat-toolbar>
     <div class="scrollable-area">
-        <cdk-virtual-scroll-viewport [itemSize]="notes.length" class="viewport">
+        <cdk-virtual-scroll-viewport [itemSize]="notes.length" *ngIf="notes.length > 0" class="viewport">
             <div *cdkVirtualFor="let note of notes;" class="note"
                  mat-ripple
                  (click)="openNoteView(note)"
@@ -33,6 +33,10 @@
                 </div>
             </div>
         </cdk-virtual-scroll-viewport>
+        <div *ngIf="notes.length ===0" class="empty-message">
+            <img src="assets/do-not-know.jpg">
+            <p class="primary-text">У вас нету общих записей с этим пользователем</p>
+        </div>
     </div>
 </div>
 <div *ngIf="loading" class="loading">

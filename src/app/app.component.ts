@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {slideInAnimation} from "./animations";
 import {ApiService} from "./service/api.service";
+import {StatusAppService} from "./service/status-app.service";
 
 @Component({
     selector: 'app-root',
@@ -14,8 +15,18 @@ import {ApiService} from "./service/api.service";
 export class AppComponent {
     title = 'bootkempik';
 
-    constructor(apiService: ApiService) {
-        apiService.getUp();
+    constructor(apiService: ApiService, public statusAppService: StatusAppService, private changeDetectorRef: ChangeDetectorRef) {
+        this.initApp(apiService);
+    }
+
+    private async initApp(apiService: ApiService) {
+        try {
+            await apiService.getUp();
+            this.statusAppService.setWorkMode();
+        } catch (e) {
+            this.statusAppService.setErrorMode();
+        }
+        this.changeDetectorRef.detectChanges();
     }
 
     public prepareRoute(outlet: RouterOutlet) {

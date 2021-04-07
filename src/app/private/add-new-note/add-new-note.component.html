@@ -7,11 +7,13 @@
             <span *ngIf="!readonlyMode">Создание новой записи</span>
             <span *ngIf="readonlyMode">Создал: {{owner | person : false}}</span>
         </div>
-        <button *ngIf="!readonlyMode" class="submit-button" mat-icon-button color="primary"
+        <button *ngIf="!statusAppService.isErrorMode && !readonlyMode" class="submit-button" mat-icon-button
+                color="primary"
                 (click)="submitButton.click()">
             <mat-icon>done</mat-icon>
         </button>
-        <button *ngIf="readonlyMode && isEditableNote" class="edit-button" mat-icon-button
+        <button *ngIf="!statusAppService.isErrorMode && readonlyMode && isEditableNote" class="edit-button"
+                mat-icon-button
                 (click)="readonlyMode = false">
             <mat-icon>edit</mat-icon>
         </button>
@@ -83,7 +85,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>Описание</mat-label>
                 <div *ngIf="readonlyMode"
-                     class="readonly-description">{{description.value.trim()}}</div>
+                     class="readonly-description"
+                     [innerHTML]="description.value | noteDescription : selectedType: allPersons"></div>
                 <textarea matInput formControlName="description" #description class="description"
                           [hidden]="readonlyMode"
                           maxlength="96"></textarea>

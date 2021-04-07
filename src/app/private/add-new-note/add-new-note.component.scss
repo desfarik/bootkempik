@@ -90,6 +90,27 @@
 
 .readonly-description {
   white-space: pre-wrap;
+
+  ::ng-deep {
+    table {
+      width: 100%;
+    }
+
+    tr {
+      height: 10px;
+    }
+
+    td {
+      padding: 0;
+      margin: 0;
+    }
+
+    td:nth-child(2) {
+      width: 60px;
+      position: relative;
+      right: -13px;
+    }
+  }
 }
 
 .person-container {
@@ -97,6 +118,7 @@
 
     mat-label {
       background: white !important;
+      padding: 0 3px;
     }
 
     .mat-form-field-flex:hover .mat-form-field-outline {

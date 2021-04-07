@@ -7,7 +7,8 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {Note} from './note';
 import {ActivatedRoute} from '@angular/router';
 import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
-import {isAutoNote} from "../user-notes/note.enum";
+import {isAutoNote} from '../user-notes/note.enum';
+import {StatusAppService} from '../../service/status-app.service';
 
 @Component({
     selector: 'app-add-new-note',
@@ -16,8 +17,13 @@ import {isAutoNote} from "../user-notes/note.enum";
 })
 export class AddNewNoteComponent implements OnInit {
 
-    constructor(private formBuilder: FormBuilder, private fireBaseService: FirebaseService, private authService: AuthorizationService,
-                private dialog: MatDialog, private route: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
+    constructor(private formBuilder: FormBuilder,
+                private fireBaseService: FirebaseService,
+                private authService: AuthorizationService,
+                private dialog: MatDialog,
+                private route: ActivatedRoute,
+                private changeDetector: ChangeDetectorRef,
+                public statusAppService: StatusAppService) {
     }
 
     public addNewNoteForm: FormGroup;

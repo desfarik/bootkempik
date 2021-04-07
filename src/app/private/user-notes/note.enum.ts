@@ -13,7 +13,11 @@ export enum NoteTypes {
 }
 
 export function isAutoNote(note: Note): boolean {
-    switch (note.type) {
+    return isAutoNoteType(note.type);
+}
+
+export function isAutoNoteType(type: string = ''): boolean {
+    switch (type) {
         case  NoteTypes.REMAINDER:
         case  NoteTypes.MUTUAL:
         case  NoteTypes.DEBT:
