@@ -20,15 +20,7 @@ export class MainComponent implements OnInit {
                 private router: Router,
                 private vkUserService: VkUserService,
                 private firebaseService: FirebaseService,
-                private statusAppService: StatusAppService,
-                swUpdate: SwUpdate) {
-        swUpdate.available.subscribe((event) => {
-            console.log('available update');
-            console.log(event);
-            swUpdate.activateUpdate().then(() => {
-                console.log('updates is activated');
-            });
-        });
+                public statusAppService: StatusAppService) {
     }
 
     async ngOnInit() {

@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
-import {AppComponent} from './app.component';
+import {AppComponent, UpdateAvailableDialog} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {LoginComponent} from './public/login/login.component';
@@ -67,7 +67,8 @@ const APP_DATE_FORMATS = {
         ErrorDialog,
         PhotoUploaderComponent,
         MoneySpreaderComponent,
-        NoteDescriptionPipe
+        NoteDescriptionPipe,
+        UpdateAvailableDialog
     ],
     imports: [
         MatButtonModule,
@@ -101,7 +102,7 @@ const APP_DATE_FORMATS = {
         MatDatepickerModule,
         MatNativeDateModule,
     ],
-    entryComponents: [SelectParticipantsDialog, ConfirmDialog, ErrorDialog, MutualConfirmDialog],
+    entryComponents: [SelectParticipantsDialog, ConfirmDialog, ErrorDialog, MutualConfirmDialog, UpdateAvailableDialog],
 
     providers: [
         // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
