@@ -1,21 +1,10 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnChanges,
-    Output,
-    SimpleChanges
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {User} from '../../../service/model/user';
 import {SelectParticipantsDialog} from '../dialog/select-participants/select-participants-dialog.component';
 import {MatDialog} from '@angular/material';
 import {AbstractControl} from '@angular/forms';
 import {MoneyPerPerson} from '../note';
-import {OutputEmitter} from "@angular/compiler/src/output/abstract_emitter";
-import {EventEmitter} from "events";
 import {round} from "../../user-notes/user-notes.component";
-import set = Reflect.set;
 
 interface SelectedPerson extends User {
     selected: boolean;
@@ -170,8 +159,10 @@ export class MoneySpreaderComponent implements OnChanges {
         });
 
         const calculatedAmount = this.calculateAmount();
+        const differenceCoins = Number((Math.abs(calculatedAmount - Number(this.amount)) * 100).toFixed(0));
+        const clearAutoPersonQuantity = this.selectedPersons.filter(person => !person.manual).length;
 
-        if (calculatedAmount !== 0 && calculatedAmount !== Number(this.amount)) {
+        if (calculatedAmount !== 0 && differenceCoins !== 0 && differenceCoins > (clearAutoPersonQuantity - 1)) {
             this.amountControl.setErrors({manualAmountError: calculatedAmount.toString()});
             return;
         }
@@ -183,9 +174,8 @@ export class MoneySpreaderComponent implements OnChanges {
     }
 
     private calculateAmount() {
-        const calculatedAmount = round(this.selectedPersons.reduce((result, person) => {
+        return round(this.selectedPersons.reduce((result, person) => {
             return result + (person.amount || 0);
         }, 0));
-        return calculatedAmount;
     }
 }

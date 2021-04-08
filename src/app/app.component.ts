@@ -5,7 +5,8 @@ import {ApiService} from './service/api.service';
 import {StatusAppService} from './service/status-app.service';
 import {SwUpdate} from '@angular/service-worker';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
-import {switchMap, tap} from "rxjs/operators";
+import {switchMap} from 'rxjs/operators';
+import {version} from './../../package.json';
 
 @Component({
     selector: 'app-root',
@@ -23,6 +24,7 @@ export class AppComponent {
                 private changeDetectorRef: ChangeDetectorRef,
                 private dialog: MatDialog,
                 swUpdate: SwUpdate) {
+        console.log(`app version: ${version}`);
         this.initApp(apiService);
         swUpdate.available
             .pipe(switchMap(this.showUpdateDialog))

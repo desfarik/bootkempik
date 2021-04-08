@@ -51,8 +51,4 @@ export class MainComponent implements OnInit {
         this.router.navigateByUrl('login');
     }
 
-    public reset() {
-        this.firebaseService.balanceService.reset();
-    }
-
 }
