@@ -8,6 +8,9 @@ import {
     ViewChild
 } from '@angular/core';
 
+const NEED_RESIZE_IMAGE_SIZE = 1024 * 1000;
+const MAX_IMAGE_SIZE = 1024 * 2000;
+
 @Component({
     selector: 'app-photo-uploader',
     templateUrl: './photo-uploader.component.html',
@@ -29,6 +32,9 @@ export class PhotoUploaderComponent implements OnInit {
 
     @ViewChild('photoInput', {static: true})
     photoInput: ElementRef<HTMLInputElement>;
+
+    @ViewChild('canvasElement', {static: true})
+    canvasElement: ElementRef<HTMLCanvasElement>;
 
     constructor(private changeDetection: ChangeDetectorRef) {
     }
@@ -58,8 +64,19 @@ export class PhotoUploaderComponent implements OnInit {
         const photo = event.target.files[0];
         const reader = new FileReader();
 
-        reader.onload = (readerEvent) => {
-            this.photoUrl = readerEvent.target.result as string;
+        reader.onload = async (readerEvent) => {
+            let base64 = readerEvent.target.result as string;
+            if (photo.size > NEED_RESIZE_IMAGE_SIZE) {
+                base64 = await this.resizeImage(base64, Number((NEED_RESIZE_IMAGE_SIZE / photo.size).toFixed(1)));
+                if (!base64) {
+                    return;
+                }
+                const blob = new Blob([base64]);
+                if (blob.size > MAX_IMAGE_SIZE) {
+                    return;
+                }
+            }
+            this.photoUrl = base64;
             this.changeDetection.detectChanges();
             this.photoElement.nativeElement.onload = () => {
                 this.loading = false;
@@ -81,5 +98,28 @@ export class PhotoUploaderComponent implements OnInit {
         this.exitFromViewMode();
         this.reset();
         this.photoUrl = null;
+    }
+
+    getImageBase64() {
+        return this.photoUrl;
+    }
+
+    private resizeImage(base64: string, quality: number): Promise<string> {
+        return new Promise(resolve => {
+            const context = this.canvasElement.nativeElement.getContext('2d');
+            const img = new Image();
+            img.onload = () => {
+                this.canvasElement.nativeElement.width = img.width;
+                this.canvasElement.nativeElement.height = img.height;
+                this.changeDetection.detectChanges();
+                context.drawImage(img, 0, 0);
+                const resizedBase64 = this.canvasElement.nativeElement.toDataURL('image/jpeg', Math.max(0.25, quality));
+                resolve(resizedBase64);
+            };
+            img.onerror = () => {
+                resolve(null);
+            };
+            img.src = base64;
+        });
     }
 }

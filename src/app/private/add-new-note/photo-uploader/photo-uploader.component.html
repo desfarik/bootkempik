@@ -8,6 +8,7 @@
         <img #photo [src]="photoUrl"
              [style.transform]="'rotate(' + rotateDeg + 'deg)'">
     </div>
+    <canvas #canvasElement [hidden]="false"></canvas>
 </div>
 <ng-template #noPhoto>
     <div class="no-photo-container">

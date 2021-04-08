@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
 import {isAutoNote} from '../user-notes/note.enum';
 import {StatusAppService} from '../../service/status-app.service';
+import {PhotoUploaderComponent} from "./photo-uploader/photo-uploader.component";
 
 @Component({
     selector: 'app-add-new-note',
@@ -37,9 +38,12 @@ export class AddNewNoteComponent implements OnInit {
     public readonlyMode = false;
     public isEditableNote = false;
     public owner: User;
+    public imageUrl: string;
 
     @ViewChild(MoneySpreaderComponent)
     private moneySpreader: MoneySpreaderComponent;
+    @ViewChild(PhotoUploaderComponent)
+    private photoUploader: PhotoUploaderComponent;
 
     public async ngOnInit() {
         this.addNewNoteForm = this.formBuilder.group({
@@ -69,6 +73,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.addNewNoteForm.controls.persons.setValue(this.allPersons);
                 this.selectedType = note.type;
                 this.isEditableNote = !isAutoNote(note) && !this.isAnyPaid(note);
+                this.imageUrl = note.imageUrl;
                 this.changeDetector.detectChanges();
             }
         });
@@ -97,14 +102,19 @@ export class AddNewNoteComponent implements OnInit {
                 this.addNewNoteForm.value.description,
                 this.moneySpreader.getMoneyPerPerson(),
                 this.addNewNoteForm.value.title,
-                this.selectedType);
-            if (this.isEditableNote) {
-                await this.fireBaseService.balanceService.updateNote(this.route.snapshot.queryParams.noteId, newNote);
-            } else {
-                await this.fireBaseService.balanceService.addNewNote(newNote);
+                this.selectedType,
+                this.photoUploader.getImageBase64());
+            try {
+                if (this.isEditableNote) {
+                    await this.fireBaseService.balanceService.updateNote(this.route.snapshot.queryParams.noteId, newNote);
+                } else {
+                    await this.fireBaseService.balanceService.addNewNote(newNote);
+                }
+                this.moveToMainPage();
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
-            this.moveToMainPage();
+
         }
     }
 
