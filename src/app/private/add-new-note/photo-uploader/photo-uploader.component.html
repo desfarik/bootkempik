@@ -5,7 +5,8 @@
     </div>
     <div *ngIf="photoUrl; else noPhoto"
          class="photo-wrapper">
-        <img #photo [src]="photoUrl"
+        <img #photo [src]="photoUrl" ngxViewerjs [viewerOptions]="viewerOptions"
+             (viewerHide)="viewMode = false"
              [style.transform]="'rotate(' + rotateDeg + 'deg)'">
     </div>
     <canvas #canvasElement [hidden]="false"></canvas>
@@ -28,7 +29,7 @@
             <mat-icon>delete_forever</mat-icon>
         </button>
         <div>
-            <button type="button" mat-icon-button (click)="photoInput.click(); reset()">
+            <button type="button" mat-icon-button (click)="photoInput.click(); rotateDeg=0">
                 <mat-icon>add_a_photo</mat-icon>
             </button>
             <button type="button" mat-icon-button (click)="rotateImage(-90)">
@@ -36,9 +37,6 @@
             </button>
             <button type="button" mat-icon-button (click)="rotateImage(+90)">
                 <mat-icon>redo</mat-icon>
-            </button>
-            <button type="button" mat-icon-button (click)="reset()">
-                <mat-icon>replay</mat-icon>
             </button>
         </div>
         <button type="button" mat-icon-button class="done" (click)="exitFromViewMode()">

@@ -4,9 +4,13 @@ import {
     Component,
     ElementRef,
     Input,
+    OnDestroy,
     OnInit,
+    SecurityContext,
     ViewChild
 } from '@angular/core';
+import {NgxViewerjsDirective} from 'ngx-viewerjs';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 const NEED_RESIZE_IMAGE_SIZE = 1024 * 1000;
 const MAX_IMAGE_SIZE = 1024 * 2000;
@@ -17,9 +21,13 @@ const MAX_IMAGE_SIZE = 1024 * 2000;
     styleUrls: ['./photo-uploader.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhotoUploaderComponent implements OnInit {
+export class PhotoUploaderComponent implements OnInit, OnDestroy {
+
+    constructor(private changeDetection: ChangeDetectorRef,
+                private sanitizer: DomSanitizer) {
+    }
     @Input()
-    photoUrl: string;
+    photoUrl: SafeResourceUrl;
     @Input()
     readonly = false;
 
@@ -36,75 +44,110 @@ export class PhotoUploaderComponent implements OnInit {
     @ViewChild('canvasElement', {static: true})
     canvasElement: ElementRef<HTMLCanvasElement>;
 
-    constructor(private changeDetection: ChangeDetectorRef) {
-    }
+    @ViewChild(NgxViewerjsDirective)
+    imageViewer: NgxViewerjsDirective;
+
+    public viewerOptions: Viewer.Options = {
+        navbar: false,
+        toolbar: false,
+        button: false,
+        tooltip: false,
+        transition: true,
+    };
 
     ngOnInit(): void {
     }
 
     onPhotoUploaderClick() {
         if (this.readonly || this.photoUrl) {
+            this.imageViewer.instance.rotate(this.rotateDeg);
             this.viewMode = true;
+            this.changeDetection.detectChanges();
             return;
         }
         this.photoInput.nativeElement.click();
     }
 
-    exitFromViewMode() {
+    async exitFromViewMode() {
         this.viewMode = false;
+        this.imageViewer.instance.hide(false);
+        this.changeDetection.detectChanges();
     }
 
-    onSelectPhoto(event) {
+    async onSelectPhoto(event) {
         if (!(event.target.files[0] instanceof Blob)) {
             return;
         }
         this.loading = true;
         this.changeDetection.detectChanges();
 
-        const photo = event.target.files[0];
-        const reader = new FileReader();
+        let photo = event.target.files[0];
+        if (photo.size > NEED_RESIZE_IMAGE_SIZE) {
+            photo = await this.resizeImage(photo, Number((NEED_RESIZE_IMAGE_SIZE / photo.size).toFixed(1)));
 
-        reader.onload = async (readerEvent) => {
-            let base64 = readerEvent.target.result as string;
-            if (photo.size > NEED_RESIZE_IMAGE_SIZE) {
-                base64 = await this.resizeImage(base64, Number((NEED_RESIZE_IMAGE_SIZE / photo.size).toFixed(1)));
-                if (!base64) {
-                    return;
-                }
-                const blob = new Blob([base64]);
-                if (blob.size > MAX_IMAGE_SIZE) {
-                    return;
-                }
+            if (!photo || photo.size > MAX_IMAGE_SIZE) {
+                return;
             }
-            this.photoUrl = base64;
+        }
+        this.photoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(photo));
+        this.changeDetection.detectChanges();
+        this.photoElement.nativeElement.onload = () => {
+            this.loading = false;
+            if (this.viewMode) {
+                this.rotateDeg = 0;
+                this.imageViewer.instance.update();
+            }
             this.changeDetection.detectChanges();
-            this.photoElement.nativeElement.onload = () => {
-                this.loading = false;
-                this.changeDetection.detectChanges();
-            };
         };
-        reader.readAsDataURL(photo);
     }
 
-    rotateImage(deg) {
+    rotateImage(deg: number) {
+        this.imageViewer.instance.rotate(deg);
         this.rotateDeg += deg;
-    }
-
-    reset() {
-        this.rotateDeg = 0;
     }
 
     deleteImage() {
         this.exitFromViewMode();
-        this.reset();
         this.photoUrl = null;
     }
 
-    getImageBase64() {
-        return this.photoUrl;
+    private needChangeOrientation(): boolean {
+        return this.rotateDeg % 180 !== 0;
     }
 
-    private resizeImage(base64: string, quality: number): Promise<string> {
+    getImageBase64(): Promise<string> {
+        return new Promise(resolve => {
+            const canvas = this.canvasElement.nativeElement;
+            const context = canvas.getContext('2d');
+            context.setTransform(1, 0, 0, 1, 0, 0);
+
+            const img = new Image();
+            img.onload = () => {
+                if (this.needChangeOrientation()) {
+                    canvas.width = img.height;
+                    canvas.height = img.width;
+                } else {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                if (this.needChangeOrientation()) {
+                    context.translate(img.height / 2, img.width / 2);
+                } else {
+                    context.translate(img.width / 2, img.height / 2);
+                }
+                context.rotate(this.rotateDeg * Math.PI / 180);
+                context.drawImage(img, -img.width / 2, -img.height / 2);
+                resolve(this.canvasElement.nativeElement.toDataURL('image/jpeg', 1));
+            };
+            img.onerror = () => {
+                resolve(null);
+            };
+            img.src = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.photoUrl);
+        });
+    }
+
+    private resizeImage(imageFile: Blob, quality: number): Promise<Blob> {
         return new Promise(resolve => {
             const context = this.canvasElement.nativeElement.getContext('2d');
             const img = new Image();
@@ -113,13 +156,16 @@ export class PhotoUploaderComponent implements OnInit {
                 this.canvasElement.nativeElement.height = img.height;
                 this.changeDetection.detectChanges();
                 context.drawImage(img, 0, 0);
-                const resizedBase64 = this.canvasElement.nativeElement.toDataURL('image/jpeg', Math.max(0.25, quality));
-                resolve(resizedBase64);
+                this.canvasElement.nativeElement.toBlob((blob) => resolve(blob), 'image/jpeg', Math.max(0.25, quality));
             };
             img.onerror = () => {
                 resolve(null);
             };
-            img.src = base64;
+            img.src = URL.createObjectURL(imageFile);
         });
+    }
+
+    ngOnDestroy(): void {
+        this.imageViewer?.instance?.destroy();
     }
 }

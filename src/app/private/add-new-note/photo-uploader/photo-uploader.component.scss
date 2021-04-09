@@ -7,22 +7,7 @@
   overflow: hidden;
   position: relative;
   background: none;
-  transition: background 0.3s;
-
-  &.view-mode {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 500;
-    width: 100%;
-
-    img {
-      width: 100%;
-    }
-  }
 }
-
 
 .loading {
   position: absolute;
@@ -65,7 +50,7 @@
   position: fixed;
   left: 0;
   width: 100%;
-  z-index: 520;
+  z-index: 2100;
 
   .controls-container {
     display: flex;

@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "~viewerjs/dist/viewer.css";
 html, body {
   height: 100%;
 }
@@ -182,3 +182,67 @@ mat-tab-body {
   background: url("assets/remainer.svg");
 }
 
+
+
+
+.viewer-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  direction: ltr;
+  font-size: 0;
+  line-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  outline: none;
+}
+
+.viewer-transition {
+  transition: all 0.3s;
+}
+.viewer-in {
+  opacity: 1;
+}
+.viewer-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.viewer-canvas {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.viewer-canvas > img {
+  height: auto;
+  margin: 15px auto;
+  max-width: 90% !important;
+  width: auto;
+}
+
+.viewer-container img {
+  display: block;
+  height: auto;
+  max-height: none !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  width: 100%;
+}
+
+.viewer-move {
+  cursor: grab;
+}
+
+.viewer-footer, .viewer-hide, .viewer-tooltip, .viewer-player {
+  display: none !important;
+}

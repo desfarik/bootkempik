@@ -49,7 +49,7 @@ export class AddNewNoteComponent implements OnInit {
         this.addNewNoteForm = this.formBuilder.group({
             title: [null, [Validators.required, Validators.maxLength(25)]],
             amount: [null, [Validators.required, Validators.max(999), Validators.min(1)]],
-            description: [null, Validators.maxLength(96)],
+            description: [null, Validators.maxLength(200)],
             date: [new Date(), Validators.required],
             persons: [[], Validators.required]
         });
@@ -103,7 +103,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.moneySpreader.getMoneyPerPerson(),
                 this.addNewNoteForm.value.title,
                 this.selectedType,
-                this.photoUploader.getImageBase64());
+                await this.photoUploader.getImageBase64());
             try {
                 if (this.isEditableNote) {
                     await this.fireBaseService.balanceService.updateNote(this.route.snapshot.queryParams.noteId, newNote);

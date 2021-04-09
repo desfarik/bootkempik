@@ -89,9 +89,9 @@
                      class="readonly-description"
                      [innerHTML]="description.value | noteDescription : selectedType: allPersons"></div>
                 <textarea matInput formControlName="description" #description class="description"
-                          [hidden]="readonlyMode"
-                          maxlength="96"></textarea>
-                <mat-hint align="end">{{description.value.length}} / 96</mat-hint>
+                          [hidden]="readonlyMode && description.value"
+                          maxlength="188"></textarea>
+                <mat-hint align="end">{{description.value.length}} / 188</mat-hint>
             </mat-form-field>
 
             <button type="submit" hidden #submitButton (click)="submit()"></button>

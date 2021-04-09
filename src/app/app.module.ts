@@ -40,6 +40,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import { NoteDescriptionPipe } from './private/add-new-note/money-spreader/pipes/note-description.pipe';
+import {NgxViewerjsModule} from "ngx-viewerjs";
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -90,6 +91,7 @@ const APP_DATE_FORMATS = {
         MatRippleModule,
         MatDialogModule,
         HttpClientModule,
+        NgxViewerjsModule,
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,
