@@ -33,7 +33,8 @@
                 </mat-error>
             </mat-form-field>
 
-            <div class="note-type-container" [ngClass]="{'disabled':readonlyMode}">
+            <div class="note-type-container"
+                 [class.disabled]="readonlyMode">
                 <div class="note-type" mat-ripple *ngFor="let type of noteTypes"
                      [ngClass]="{'selected': type === selectedType}">
                     <i class="note-icon-32px" [ngClass]="type + '-icon'" (click)="selectedType = type"></i>
