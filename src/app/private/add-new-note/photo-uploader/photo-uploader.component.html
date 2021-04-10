@@ -27,11 +27,11 @@
 
 <div *ngIf="viewMode" class="view-mode-controls bottom">
     <div class="controls-container">
-        <button type="button" mat-icon-button (click)="deleteImage()">
+        <button [disabled]="readonly" type="button" mat-icon-button (click)="deleteImage()">
             <mat-icon>delete_forever</mat-icon>
         </button>
         <div>
-            <button type="button" mat-icon-button (click)="photoInput.click();">
+            <button [disabled]="readonly" type="button" mat-icon-button (click)="photoInput.click();">
                 <mat-icon>add_a_photo</mat-icon>
             </button>
             <button type="button" mat-icon-button (click)="rotateImage(-90)">

@@ -14,7 +14,7 @@
         </button>
         <button *ngIf="!statusAppService.isErrorMode && readonlyMode && isEditableNote" class="edit-button"
                 mat-icon-button
-                (click)="readonlyMode = false">
+                (click)="changeModeToEdit()">
             <mat-icon>edit</mat-icon>
         </button>
     </mat-toolbar>
@@ -23,7 +23,7 @@
             <mat-spinner></mat-spinner>
             <div class="click-handler"></div>
         </div>
-        <form [formGroup]="addNewNoteForm" class="form-container" [ngClass]="{'disabled': readonlyMode}">
+        <form [formGroup]="addNewNoteForm" class="form-container">
             <mat-form-field appearance="outline">
                 <mat-label>Заголовок</mat-label>
                 <input matInput #title formControlName="title" type="text" autocomplete="off" maxlength="25">

@@ -75,6 +75,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.selectedType = note.type;
                 this.isEditableNote = !isAutoNote(note) && !this.isAnyPaid(note) && note.ownerId === this.me.id;
                 this.imageUrl = note.imageUrl;
+                this.addNewNoteForm.disable();
                 this.changeDetector.detectChanges();
             }
         });
@@ -87,6 +88,11 @@ export class AddNewNoteComponent implements OnInit {
             }
             return moneyPerPerson.paid;
         });
+    }
+
+    public changeModeToEdit() {
+        this.readonlyMode = false;
+        this.addNewNoteForm.enable();
     }
 
     public async submit() {
