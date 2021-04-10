@@ -3,10 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Input,
+    Input, OnChanges,
     OnDestroy,
-    OnInit,
-    SecurityContext,
+    OnInit, SecurityContext, SimpleChanges,
     ViewChild
 } from '@angular/core';
 import {NgxViewerjsDirective} from 'ngx-viewerjs';
@@ -21,12 +20,16 @@ const MAX_IMAGE_SIZE = 1024 * 2000;
     styleUrls: ['./photo-uploader.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhotoUploaderComponent implements OnInit, OnDestroy {
+export class PhotoUploaderComponent implements OnInit, OnDestroy, OnChanges {
 
     constructor(private changeDetection: ChangeDetectorRef,
                 private sanitizer: DomSanitizer) {
     }
+
     @Input()
+    initialUrl: string;
+    private localInitialUrl: string;
+
     photoUrl: SafeResourceUrl;
     @Input()
     readonly = false;
@@ -47,30 +50,69 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy {
     @ViewChild(NgxViewerjsDirective)
     imageViewer: NgxViewerjsDirective;
 
-    public viewerOptions: Viewer.Options = {
-        navbar: false,
-        toolbar: false,
-        button: false,
-        tooltip: false,
-        transition: true,
-    };
+    public get viewerOptions(): Viewer.Options {
+        const component = this;
+        return {
+            navbar: false,
+            toolbar: false,
+            button: false,
+            tooltip: false,
+            transition: true,
+            view(event: CustomEvent) {
+                while (Math.abs(component.rotateDeg) >= 360) {
+                    component.rotateDeg = component.rotateDeg - (360 * Math.sign(component.rotateDeg));
+                }
+                if (component.rotateDeg < 0) {
+                    component.rotateDeg = 360 + component.rotateDeg;
+                }
+                event.detail.image.classList.add(component.rotateClass);
+            }
+        };
+    }
+
+    private get viewerImage(): HTMLImageElement {
+        // @ts-ignore
+        return this.imageViewer.instance.image;
+    }
+
+    private get rotateClass(): string {
+        return `rotate-${this.rotateDeg}`;
+    }
 
     ngOnInit(): void {
     }
 
+    async ngOnChanges(changes: SimpleChanges): Promise<void> {
+        if (changes?.initialUrl?.currentValue) {
+            this.loading = true;
+            try {
+                const response = await fetch(this.initialUrl);
+                const photo = await response.blob();
+                this.localInitialUrl = URL.createObjectURL(photo);
+                this.photoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.localInitialUrl);
+            } finally {
+                this.loading = false;
+                this.changeDetection.detectChanges();
+            }
+        }
+    }
+
     onPhotoUploaderClick() {
         if (this.readonly || this.photoUrl) {
-            this.imageViewer.instance.rotate(this.rotateDeg);
-            this.viewMode = true;
             this.changeDetection.detectChanges();
             return;
         }
         this.photoInput.nativeElement.click();
     }
 
+    onImageViewerViewed() {
+        this.imageViewer.instance.rotateTo(this.rotateDeg);
+        this.viewerImage.classList.remove(this.rotateClass);
+    }
+
     async exitFromViewMode() {
         this.viewMode = false;
-        this.imageViewer.instance.hide(false);
+        this.imageViewer.instance.hide();
         this.changeDetection.detectChanges();
     }
 
@@ -107,8 +149,8 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy {
     }
 
     deleteImage() {
-        this.exitFromViewMode();
         this.photoUrl = null;
+        this.exitFromViewMode();
     }
 
     private needChangeOrientation(): boolean {
@@ -116,6 +158,10 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy {
     }
 
     getImageBase64(): Promise<string> {
+        const safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.photoUrl);
+        if (safeUrl === this.localInitialUrl && Math.abs(this.rotateDeg) % 360 === 0) {
+            return Promise.resolve(null);
+        }
         return new Promise(resolve => {
             const canvas = this.canvasElement.nativeElement;
             const context = canvas.getContext('2d');
@@ -138,12 +184,12 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy {
                 }
                 context.rotate(this.rotateDeg * Math.PI / 180);
                 context.drawImage(img, -img.width / 2, -img.height / 2);
-                resolve(this.canvasElement.nativeElement.toDataURL('image/jpeg', 1));
+                resolve(canvas.toDataURL('image/jpeg', 1));
             };
             img.onerror = () => {
                 resolve(null);
             };
-            img.src = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.photoUrl);
+            img.src = safeUrl;
         });
     }
 

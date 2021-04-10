@@ -1,6 +1,5 @@
 export class Note {
     public nowDate: number;
-    public imageUrl: string;
 
     constructor(public date: number, public amount: number,
                 public ownerId: number,
@@ -8,7 +7,8 @@ export class Note {
                 public moneyPerPerson: MoneyPerPerson,
                 public title: string,
                 public type: string,
-                private imageBase64: string) {
+                private imageBase64: string,
+                public imageUrl?: string) {
         this.nowDate = new Date().getTime();
     }
 }

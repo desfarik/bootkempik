@@ -42,7 +42,7 @@
 
             <div class="photo-amount-date-container">
                 <app-photo-uploader class="photo-container"
-                                    [photoUrl]="imageUrl"
+                                    [initialUrl]="imageUrl"
                                     [readonly]="readonlyMode"></app-photo-uploader>
                 <div>
                     <mat-form-field appearance="outline" class="amount-container">
@@ -90,8 +90,8 @@
                      [innerHTML]="description.value | noteDescription : selectedType: allPersons"></div>
                 <textarea matInput formControlName="description" #description class="description"
                           [hidden]="readonlyMode && description.value"
-                          maxlength="188"></textarea>
-                <mat-hint align="end">{{description.value.length}} / 188</mat-hint>
+                          maxlength="200"></textarea>
+                <mat-hint align="end">{{description.value.length}} / 200</mat-hint>
             </mat-form-field>
 
             <button type="submit" hidden #submitButton (click)="submit()"></button>

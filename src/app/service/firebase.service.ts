@@ -3,7 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import {UserService} from './user.service';
 import {firebaseConfig} from '../../../firebase.config';
-import {AllNotes} from '../private/add-new-note/note';
+import {AllNotes, Note} from '../private/add-new-note/note';
 import {BalanceService} from './balance.service';
 import {CacheService} from './cache.service';
 import {ApiService} from './api.service';
@@ -35,6 +35,12 @@ export class FirebaseService {
             }
         });
         return userAllNotes;
+    }
+
+    public getNoteById(noteId: string): Promise<Note> {
+        return this.database.ref(`/notes/${noteId}`).once('value').then(snapshot => {
+            return snapshot.val() as Note;
+        });
     }
 
     private getAllNotes(): Promise<AllNotes> {

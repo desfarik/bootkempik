@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~viewerjs/dist/viewer.css";
+
 html, body {
   height: 100%;
 }
@@ -183,8 +184,6 @@ mat-tab-body {
 }
 
 
-
-
 .viewer-container {
   position: fixed;
   top: 0;
@@ -206,9 +205,11 @@ mat-tab-body {
 .viewer-transition {
   transition: all 0.3s;
 }
+
 .viewer-in {
   opacity: 1;
 }
+
 .viewer-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -245,4 +246,12 @@ mat-tab-body {
 
 .viewer-footer, .viewer-hide, .viewer-tooltip, .viewer-player {
   display: none !important;
+}
+
+$rotates: 90, 180, 270;
+
+@each $deg in $rotates {
+  .rotate-#{$deg} {
+    transform: rotate($deg+deg) !important;
+  }
 }

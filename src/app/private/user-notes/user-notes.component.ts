@@ -28,7 +28,7 @@ export class UserNotesComponent implements OnInit {
                 private changeDetector: ChangeDetectorRef) {
     }
 
-    public notes: Note[] = [];
+    public notes: Note[];
     public userAllNotes: AllNotes;
     public user: User;
     public me: User;
@@ -81,7 +81,8 @@ export class UserNotesComponent implements OnInit {
     public openNoteView(noteToOpen: Note) {
         const noteId = Object.entries(this.userAllNotes).find(([, note]) => note === noteToOpen)[0];
         this.cacheService.setValue(noteId, noteToOpen);
-        this.router.navigate(['/add-new-note'], {queryParams: {noteId}});
+        const from = `/user-notes?userId=${this.user.id}`;
+        this.router.navigate(['/add-new-note'], {queryParams: {noteId, from}});
     }
 
     public getOpenedOwnerPositiveSum(): number {
@@ -113,7 +114,7 @@ export class UserNotesComponent implements OnInit {
     }
 
     public moveToMainPage() {
-        history.back();
+        this.router.navigateByUrl('');
     }
 
     public openMutualConfirmDialog() {

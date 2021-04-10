@@ -7,6 +7,8 @@
          class="photo-wrapper">
         <img #photo [src]="photoUrl" ngxViewerjs [viewerOptions]="viewerOptions"
              (viewerHide)="viewMode = false"
+             (viewerShow)="viewMode = true"
+             (viewerViewed)="onImageViewerViewed()"
              [style.transform]="'rotate(' + rotateDeg + 'deg)'">
     </div>
     <canvas #canvasElement [hidden]="false"></canvas>
@@ -29,7 +31,7 @@
             <mat-icon>delete_forever</mat-icon>
         </button>
         <div>
-            <button type="button" mat-icon-button (click)="photoInput.click(); rotateDeg=0">
+            <button type="button" mat-icon-button (click)="photoInput.click();">
                 <mat-icon>add_a_photo</mat-icon>
             </button>
             <button type="button" mat-icon-button (click)="rotateImage(-90)">
@@ -43,5 +45,8 @@
             <mat-icon>done</mat-icon>
         </button>
     </div>
+</div>
 
+<div *ngIf="loading && viewMode" class="loading view-mode">
+    <mat-spinner></mat-spinner>
 </div>

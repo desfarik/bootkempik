@@ -5,7 +5,7 @@ import {AuthorizationService} from '../../service/authorization.service';
 import {FirebaseService} from '../../service/firebase.service';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {Note} from './note';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
 import {isAutoNote} from '../user-notes/note.enum';
 import {StatusAppService} from '../../service/status-app.service';
@@ -23,6 +23,7 @@ export class AddNewNoteComponent implements OnInit {
                 private authService: AuthorizationService,
                 private dialog: MatDialog,
                 private route: ActivatedRoute,
+                private router: Router,
                 private changeDetector: ChangeDetectorRef,
                 public statusAppService: StatusAppService) {
     }
@@ -72,7 +73,7 @@ export class AddNewNoteComponent implements OnInit {
                 this.moneySpreader.setMoneyPerPerson(this.allPersons, note.moneyPerPerson);
                 this.addNewNoteForm.controls.persons.setValue(this.allPersons);
                 this.selectedType = note.type;
-                this.isEditableNote = !isAutoNote(note) && !this.isAnyPaid(note);
+                this.isEditableNote = !isAutoNote(note) && !this.isAnyPaid(note) && note.ownerId === this.me.id;
                 this.imageUrl = note.imageUrl;
                 this.changeDetector.detectChanges();
             }
@@ -103,7 +104,8 @@ export class AddNewNoteComponent implements OnInit {
                 this.moneySpreader.getMoneyPerPerson(),
                 this.addNewNoteForm.value.title,
                 this.selectedType,
-                await this.photoUploader.getImageBase64());
+                await this.photoUploader.getImageBase64(),
+                this.photoUploader.initialUrl);
             try {
                 if (this.isEditableNote) {
                     await this.fireBaseService.balanceService.updateNote(this.route.snapshot.queryParams.noteId, newNote);
@@ -119,7 +121,12 @@ export class AddNewNoteComponent implements OnInit {
     }
 
     public moveToMainPage() {
-        history.back();
+        const from = this.route.snapshot.queryParams.from;
+        if (from) {
+            this.router.navigateByUrl(from);
+        } else {
+            this.router.navigateByUrl('');
+        }
     }
 }
 

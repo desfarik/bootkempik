@@ -14,7 +14,7 @@
         </div>
     </mat-toolbar>
     <div class="scrollable-area">
-        <cdk-virtual-scroll-viewport [itemSize]="notes.length" *ngIf="notes.length > 0" class="viewport">
+        <cdk-virtual-scroll-viewport [itemSize]="notes?.length" *ngIf="notes?.length > 0" class="viewport">
             <div *cdkVirtualFor="let note of notes;" class="note"
                  mat-ripple
                  (click)="openNoteView(note)"
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </cdk-virtual-scroll-viewport>
-        <div *ngIf="notes.length ===0" class="empty-message">
+        <div *ngIf="notes?.length === 0" class="empty-message">
             <img src="assets/do-not-know.jpg">
             <p class="primary-text">У вас нету общих записей с этим пользователем</p>
         </div>

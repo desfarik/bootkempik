@@ -9,9 +9,12 @@
   background: none;
 }
 
-.loading {
+.loading:not(.view-mode) {
   position: absolute;
   background: white;
+}
+.loading.view-mode {
+  z-index: 5000;
 }
 
 .photo-wrapper {
