@@ -150,6 +150,7 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy, OnChanges {
 
     deleteImage() {
         this.photoUrl = null;
+        this.photoInput.nativeElement.value = null;
         this.exitFromViewMode();
     }
 

@@ -4,3 +4,7 @@
 <div *ngIf="statusAppService.isErrorMode" class="error-mode">
     Сервер не отвечает. Приложение работает в readonly режиме
 </div>
+<div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+    <div class="click-handler"></div>
+</div>

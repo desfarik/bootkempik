@@ -187,7 +187,11 @@ export class UserNotesComponent implements OnInit {
 })
 export class ConfirmDialog {
     constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-        this.amountControl = new FormControl(data.amount, [Validators.required, Validators.max(999), Validators.min(1)]);
+        this.amountControl = new FormControl(data.amount,
+            [Validators.required,
+                Validators.max(999),
+                Validators.min(1),
+                Validators.pattern(/^\d{1,3}([\\.,]\d{1,2})?$/)]);
     }
 
     public amountControl: FormControl;

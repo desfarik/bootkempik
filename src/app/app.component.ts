@@ -5,8 +5,10 @@ import {ApiService} from './service/api.service';
 import {StatusAppService} from './service/status-app.service';
 import {SwUpdate} from '@angular/service-worker';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
-import {switchMap} from 'rxjs/operators';
+import {filter, finalize, switchMap, tap} from 'rxjs/operators';
 import {version} from './../../package.json';
+import {FirebaseService} from "./service/firebase.service";
+import {race, timer} from "rxjs";
 
 @Component({
     selector: 'app-root',
@@ -19,19 +21,31 @@ import {version} from './../../package.json';
 export class AppComponent {
     title = 'bootkempik';
 
+    loading = false;
+
     constructor(apiService: ApiService,
+                private firebaseService: FirebaseService,
                 public statusAppService: StatusAppService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private dialog: MatDialog,
                 swUpdate: SwUpdate) {
         console.log(`app version: ${version}`);
         this.initApp(apiService);
-        swUpdate.available
-            .pipe(switchMap(this.showUpdateDialog))
-            .subscribe(event => {
-                console.log(event);
+        this.onChangeAppVersion()
+            .pipe(
+                switchMap(this.showUpdateDialog),
+                tap(this.showLoader),
+                switchMap(() => race(swUpdate.available, timer(15000))),
+                finalize(() => this.loading = false)
+            )
+            .subscribe(() => {
                 swUpdate.activateUpdate().then(() => document.location.reload());
             });
+    }
+
+    private onChangeAppVersion() {
+        return this.firebaseService.onChangeAppVersion.pipe(
+            filter((newVersion) => newVersion !== version));
     }
 
     private showUpdateDialog = () => {
@@ -40,6 +54,10 @@ export class AppComponent {
                 disableClose: true,
             }
         ).afterClosed();
+    }
+
+    private showLoader = () => {
+        this.loading = true;
     }
 
     private async initApp(apiService: ApiService) {

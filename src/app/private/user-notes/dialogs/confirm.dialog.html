@@ -6,7 +6,7 @@
             class="bold-text">{{data.person.first_name + " " + data.person.last_name}}</span> долга на:</p>
     <mat-form-field appearance="outline">
         <mat-label>Сумму</mat-label>
-        <input matInput [formControl]="amountControl" type="text" autocomplete="off" maxlength="25">
+        <input matInput [formControl]="amountControl" type="number" autocomplete="off">
         <mat-error *ngIf="amountControl.hasError('required')">
             Поле обязательно для заполнения
         </mat-error>
@@ -15,6 +15,9 @@
         </mat-error>
         <mat-error *ngIf="amountControl.hasError('min')">
             Минимальная сумма списания 1 руб.
+        </mat-error>
+        <mat-error *ngIf="amountControl.hasError('pattern')">
+            Точность суммы списания должна быть в пределах сотых
         </mat-error>
     </mat-form-field>
 </div>

@@ -162,7 +162,7 @@ export class MoneySpreaderComponent implements OnChanges {
         const differenceCoins = Number((Math.abs(calculatedAmount - Number(this.amount)) * 100).toFixed(0));
         const clearAutoPersonQuantity = this.selectedPersons.filter(person => !person.manual).length;
 
-        if (calculatedAmount !== 0 && differenceCoins !== 0 && differenceCoins > (clearAutoPersonQuantity - 1)) {
+        if (calculatedAmount !== Number(this.amount) && differenceCoins > (clearAutoPersonQuantity - 1)) {
             this.amountControl.setErrors({manualAmountError: calculatedAmount.toString()});
             return;
         }

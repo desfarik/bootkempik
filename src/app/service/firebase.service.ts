@@ -7,6 +7,8 @@ import {AllNotes, Note} from '../private/add-new-note/note';
 import {BalanceService} from './balance.service';
 import {CacheService} from './cache.service';
 import {ApiService} from './api.service';
+import {BehaviorSubject} from 'rxjs';
+import {version} from './../../../package.json';
 
 @Injectable({
     providedIn: 'root'
@@ -15,12 +17,20 @@ export class FirebaseService {
     public userService: UserService;
     public balanceService: BalanceService;
     private readonly database: firebase.database.Database;
+    public onChangeAppVersion = new BehaviorSubject<string>(version);
 
     constructor(cacheService: CacheService, private apiService: ApiService) {
         firebase.initializeApp(firebaseConfig);
         this.database = firebase.database();
         this.userService = new UserService(this.database, apiService);
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
+        this.listenAppVersion();
+    }
+
+    private listenAppVersion(): void {
+        this.database.ref(`/app-version`).on('value', (snapshot) => {
+            this.onChangeAppVersion.next(snapshot.val() as string);
+        });
     }
 
     public async getUserNotes(userId: number, userId2: number): Promise<AllNotes> {

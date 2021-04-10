@@ -95,9 +95,7 @@ const APP_DATE_FORMATS = {
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,
-          // Register the ServiceWorker as soon as the app is stable
-          // or after 5 seconds (whichever comes first).
-          registrationStrategy: 'registerWhenStable:5000'
+          registrationStrategy: 'registerImmediately'
         }),
     ],
     exports: [
