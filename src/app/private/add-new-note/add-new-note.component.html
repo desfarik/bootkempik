@@ -84,7 +84,8 @@
                 <input disabled="disabled" class="person-select" matInput formControlName="persons" autocomplete="off">
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline"
+                            [class.disabled]="readonlyMode">
                 <mat-label>Описание</mat-label>
                 <div *ngIf="readonlyMode"
                      class="readonly-description"
