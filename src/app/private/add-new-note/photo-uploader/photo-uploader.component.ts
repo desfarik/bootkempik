@@ -159,8 +159,11 @@ export class PhotoUploaderComponent implements OnInit, OnDestroy, OnChanges {
 
     getImageBase64(): Promise<string> {
         const safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.photoUrl);
-        if (safeUrl === this.localInitialUrl && Math.abs(this.rotateDeg) % 360 === 0) {
+        if (!safeUrl) {
             return Promise.resolve(null);
+        }
+        if (safeUrl === this.localInitialUrl && Math.abs(this.rotateDeg) % 360 === 0) {
+            return Promise.resolve('equal');
         }
         return new Promise(resolve => {
             const canvas = this.canvasElement.nativeElement;
