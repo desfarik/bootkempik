@@ -33,14 +33,17 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {ConfirmDialog, MutualConfirmDialog, UserNotesComponent} from './private/user-notes/user-notes.component';
 import {DatePipe} from './private/user-notes/pipe/date.pipe';
 import {MoneyPipe} from './private/user-notes/pipe/money.pipe';
-import {LongPressDirective} from './directive/long-press.directive';
 import {PhotoUploaderComponent} from './private/add-new-note/photo-uploader/photo-uploader.component';
 import {MoneySpreaderComponent} from './private/add-new-note/money-spreader/money-spreader.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import { NoteDescriptionPipe } from './private/add-new-note/money-spreader/pipes/note-description.pipe';
-import {NgxViewerjsModule} from "ngx-viewerjs";
+import {NoteDescriptionPipe} from './private/add-new-note/money-spreader/pipes/note-description.pipe';
+import {NgxViewerjsModule} from 'ngx-viewerjs';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {HttpErrorInterceptor} from "./interceptors/http-error-interceptor.service";
+import {CookieInterceptor} from "./interceptors/cookie-interceptor.service";
 
 const APP_DATE_FORMATS = {
     parse: {dateInput: {month: 'short', year: 'numeric', day: 'numeric'}},
@@ -62,7 +65,6 @@ const APP_DATE_FORMATS = {
         MoneyPipe,
         SelectParticipantsDialog,
         UserNotesComponent,
-        LongPressDirective,
         ConfirmDialog,
         MutualConfirmDialog,
         ErrorDialog,
@@ -92,10 +94,12 @@ const APP_DATE_FORMATS = {
         MatDialogModule,
         HttpClientModule,
         NgxViewerjsModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
         ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: environment.production,
-          registrationStrategy: 'registerImmediately'
+            enabled: environment.production,
+            registrationStrategy: 'registerImmediately'
         }),
     ],
     exports: [
@@ -111,6 +115,16 @@ const APP_DATE_FORMATS = {
         {
             provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
         },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpErrorInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CookieInterceptor,
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })

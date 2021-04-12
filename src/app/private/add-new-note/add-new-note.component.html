@@ -7,13 +7,15 @@
             <span *ngIf="!readonlyMode">Создание новой записи</span>
             <span *ngIf="readonlyMode">Создал: {{owner | person : false}}</span>
         </div>
-        <button *ngIf="!statusAppService.isErrorMode && !readonlyMode" class="submit-button" mat-icon-button
+        <button *ngIf="!readonlyMode" class="submit-button" mat-icon-button
                 color="primary"
+                [disabled]="statusAppService.isErrorMode"
                 (click)="submitButton.click()">
             <mat-icon>done</mat-icon>
         </button>
-        <button *ngIf="!statusAppService.isErrorMode && readonlyMode && isEditableNote" class="edit-button"
+        <button *ngIf="readonlyMode && isEditableNote" class="edit-button"
                 mat-icon-button
+                [disabled]="statusAppService.isErrorMode"
                 (click)="changeModeToEdit()">
             <mat-icon>edit</mat-icon>
         </button>

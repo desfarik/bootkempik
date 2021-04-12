@@ -6,7 +6,8 @@
             </button>
             <span>{{user && user.first_name}} {{user && user.last_name}}</span>
         </div>
-        <div class="toolbar-action" *ngIf="!statusAppService.isErrorMode">
+        <div class="toolbar-action"
+             [class.disabled]="statusAppService.isErrorMode">
             <i *ngIf="canMutualWriteOff"
                mat-ripple class="mutual-icon" (click)="openMutualConfirmDialog()"></i>
             <i *ngIf="hasOwnOpenedNotes"

@@ -1,23 +1,36 @@
 <mat-toolbar color="primary" class="nav-bar">
-  <span matRipple>Буткемпик</span>
-  <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-  <button *ngIf="!statusAppService.isErrorMode" class="add-new-note" routerLink="/add-new-note" routerLinkActive="active" mat-fab
-          aria-label="Example icon-button with a heart icon">
-    <mat-icon>add</mat-icon>
-  </button>
+    <span matRipple>Буткемпик</span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <button class="add-new-note" routerLink="/add-new-note"
+            routerLinkActive="active" mat-fab
+            [disabled]="statusAppService.isErrorMode"
+            aria-label="Example icon-button with a heart icon">
+        <mat-icon>add</mat-icon>
+    </button>
 </mat-toolbar>
 <balance *ngIf="!loading"></balance>
 
 <div *ngIf="loading" class="loading">
-  <mat-spinner></mat-spinner>
-  <div class="click-handler"></div>
+    <mat-spinner></mat-spinner>
+    <div class="click-handler"></div>
 </div>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="logout()">
-    <mat-icon>exit_to_app</mat-icon>
-    <span>Выйти</span>
-  </button>
+    <button mat-menu-item class="notification-menu-item"
+            [disabled]="statusAppService.isErrorMode">
+        <mat-slide-toggle
+                (click)="$event.stopImmediatePropagation()"
+                (change)="onToggleChange($event)"
+                [checked]="isEnabledNotifications"
+                [disabled]="statusAppService.isErrorMode">
+            Уведомления
+        </mat-slide-toggle>
+    </button>
+
+    <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Выйти</span>
+    </button>
 </mat-menu>

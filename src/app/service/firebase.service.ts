@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import firebase from 'firebase/app';
-import 'firebase/database';
 import {UserService} from './user.service';
 import {firebaseConfig} from '../../../firebase.config';
 import {AllNotes, Note} from '../private/add-new-note/note';
@@ -9,6 +8,10 @@ import {CacheService} from './cache.service';
 import {ApiService} from './api.service';
 import {BehaviorSubject} from 'rxjs';
 import {version} from './../../../package.json';
+import {NotificationService} from './notification.service';
+import 'firebase/database';
+import 'firebase/messaging';
+import {SnackBarService} from "./snack-bar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,14 +19,17 @@ import {version} from './../../../package.json';
 export class FirebaseService {
     public userService: UserService;
     public balanceService: BalanceService;
+    public notificationService: NotificationService;
     private readonly database: firebase.database.Database;
     public onChangeAppVersion = new BehaviorSubject<string>(version);
 
-    constructor(cacheService: CacheService, private apiService: ApiService) {
+    constructor(cacheService: CacheService, private apiService: ApiService,
+                snackBarService: SnackBarService) {
         firebase.initializeApp(firebaseConfig);
         this.database = firebase.database();
         this.userService = new UserService(this.database, apiService);
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
+        this.notificationService = new NotificationService(apiService, firebase.messaging(), snackBarService);
         this.listenAppVersion();
     }
 

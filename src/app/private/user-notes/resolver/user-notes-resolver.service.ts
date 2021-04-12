@@ -10,12 +10,12 @@ import {CacheService} from '../../../service/cache.service';
 })
 export class UserNotesResolver implements Resolve<AllNotes> {
 
-    constructor(private firebaseService: FirebaseService, private authorizationService: AuthorizationService,
+    constructor(private firebaseService: FirebaseService,
                 private cacheService: CacheService) {
     }
 
     public async resolve(route: ActivatedRouteSnapshot): Promise<AllNotes> {
-        const currentUserId = Number(this.authorizationService.getUserId());
+        const currentUserId = Number(AuthorizationService.getUserId());
         const cacheName = route.queryParams.userId + currentUserId;
         const fromCache = this.cacheService.getValue(cacheName);
         if (fromCache) {

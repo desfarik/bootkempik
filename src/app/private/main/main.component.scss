@@ -29,3 +29,10 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.notification-menu-item ::ng-deep {
+  .mat-slide-toggle-label {
+    position: relative;
+    left: -5px;
+  }
+}

@@ -6,6 +6,11 @@
     display: flex;
     justify-content: space-between;
 
+    &.disabled {
+      opacity: 0.26;
+      pointer-events: none;
+    }
+
     .debt-icon, .mutual-icon {
       border-radius: 50%;
       width: 44px;

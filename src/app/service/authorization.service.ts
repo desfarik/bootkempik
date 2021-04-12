@@ -1,43 +1,44 @@
 import {Injectable} from '@angular/core';
-import {User} from "./model/user";
+import {User} from './model/user';
 
+
+const USER = 'user';
+const USER_ID = 'user_id';
+const VK_TOKEN = 'vk_token';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthorizationService {
 
-  private USER = 'user';
-  private USER_ID = 'user_id';
-  private VK_TOKEN = 'vk_token';
 
-  public logout(): void {
-    localStorage.clear();
-  }
+    public static getVkToken(): string {
+        return localStorage.getItem(VK_TOKEN);
+    }
 
-  public getCurrentUser(): User {
-    return JSON.parse(localStorage.getItem(this.USER));
-  }
+    public static getUserId(): number {
+        return Number(localStorage.getItem(USER_ID));
+    }
 
-  public authorize(user: User, token: string): void {
-    localStorage.setItem(this.USER, JSON.stringify(user));
-    localStorage.setItem(this.VK_TOKEN, token);
-  }
+    public logout(): void {
+        localStorage.clear();
+    }
 
-  public isAuthorized(): boolean {
-    return !!localStorage.getItem(this.VK_TOKEN) && !!localStorage.getItem(this.USER);
-  }
+    public getCurrentUser(): User {
+        return JSON.parse(localStorage.getItem(USER));
+    }
 
-  public saveVkTokenAndId(token, userId): void {
-    localStorage.setItem(this.VK_TOKEN, token);
-    localStorage.setItem(this.USER_ID, userId);
-  }
+    public authorize(user: User, token: string): void {
+        localStorage.setItem(USER, JSON.stringify(user));
+        localStorage.setItem(VK_TOKEN, token);
+    }
 
-  public static getVkToken(): string {
-    return localStorage.getItem('vk_token')
-  }
+    public isAuthorized(): boolean {
+        return !!localStorage.getItem(VK_TOKEN) && !!localStorage.getItem(USER);
+    }
 
-  public getUserId(): number {
-    return Number(localStorage.getItem(this.USER_ID));
-  }
+    public saveVkTokenAndId(token, userId): void {
+        localStorage.setItem(VK_TOKEN, token);
+        localStorage.setItem(USER_ID, userId);
+    }
 }

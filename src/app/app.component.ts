@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {slideInAnimation} from './animations';
 import {ApiService} from './service/api.service';
@@ -7,8 +7,9 @@ import {SwUpdate} from '@angular/service-worker';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {filter, finalize, switchMap, tap} from 'rxjs/operators';
 import {version} from './../../package.json';
-import {FirebaseService} from "./service/firebase.service";
-import {race, timer} from "rxjs";
+import {FirebaseService} from './service/firebase.service';
+import {race, timer} from 'rxjs';
+import {SnackBarService} from './service/snack-bar.service';
 
 @Component({
     selector: 'app-root',
@@ -23,20 +24,25 @@ export class AppComponent {
 
     loading = false;
 
-    constructor(apiService: ApiService,
+    @ViewChild('errorMessage')
+    public errorMessage: ElementRef<HTMLElement>;
+
+    constructor(private apiService: ApiService,
                 private firebaseService: FirebaseService,
                 public statusAppService: StatusAppService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private dialog: MatDialog,
+                private snackBarService: SnackBarService,
                 swUpdate: SwUpdate) {
         console.log(`app version: ${version}`);
-        this.initApp(apiService);
+        this.checkBackendStatus();
         this.onChangeAppVersion()
             .pipe(
                 switchMap(this.showUpdateDialog),
                 tap(this.showLoader),
+                tap(() => swUpdate.checkForUpdate()),
                 switchMap(() => race(swUpdate.available, timer(15000))),
-                finalize(() => this.loading = false)
+                finalize(() => document.location.reload())
             )
             .subscribe(() => {
                 swUpdate.activateUpdate().then(() => document.location.reload());
@@ -60,14 +66,28 @@ export class AppComponent {
         this.loading = true;
     }
 
-    private async initApp(apiService: ApiService) {
+    private async checkBackendStatus() {
         try {
-            await apiService.getUp();
+            await this.apiService.getUp();
+            if (this.statusAppService.isErrorMode) {
+                this.snackBarService.showSuccess('Связь успешно восстановлена', 'OK');
+            }
             this.statusAppService.setWorkMode();
         } catch (e) {
             this.statusAppService.setErrorMode();
+            this.showReadonlyError();
+        } finally {
+            this.loading = false;
+            this.changeDetectorRef.detectChanges();
         }
-        this.changeDetectorRef.detectChanges();
+    }
+
+    private showReadonlyError() {
+        this.snackBarService.showReadonlyError().then(() => {
+            this.loading = true;
+            this.changeDetectorRef.detectChanges();
+            this.checkBackendStatus();
+        });
     }
 
     public prepareRoute(outlet: RouterOutlet) {

@@ -3,17 +3,17 @@ import {User} from "../../../../service/model/user";
 import {AuthorizationService} from "../../../../service/authorization.service";
 
 @Pipe({
-  name: 'person'
+    name: 'person'
 })
 export class PersonPipe implements PipeTransform {
-  public meId: number;
+    public meId: number;
 
-  constructor(private authService: AuthorizationService) {
-    this.meId = authService.getUserId();
-  }
+    constructor() {
+        this.meId = AuthorizationService.getUserId();
+    }
 
-  transform(value: User, changeMe: boolean = true): any {
-    return value && (value.first_name + ' ' + value.last_name);
-  }
+    transform(value: User, changeMe: boolean = true): any {
+        return value && (value.first_name + ' ' + value.last_name);
+    }
 
 }
