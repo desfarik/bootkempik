@@ -5,6 +5,7 @@ import {User} from './model/user';
 const USER = 'user';
 const USER_ID = 'user_id';
 const VK_TOKEN = 'vk_token';
+const AUTH_KEYS = [USER, USER_ID, VK_TOKEN];
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +22,7 @@ export class AuthorizationService {
     }
 
     public logout(): void {
-        localStorage.clear();
+        AUTH_KEYS.forEach((key: string) => localStorage.removeItem(key));
     }
 
     public getCurrentUser(): User {

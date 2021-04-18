@@ -25,12 +25,15 @@
 
 <input #photoInput hidden type="file" accept="image/jpeg,image/png" (change)="onSelectPhoto($event)">
 
-<div *ngIf="viewMode" class="view-mode-controls bottom">
+<div *ngIf="viewMode" class="view-mode-controls">
     <div class="controls-container">
-        <button [disabled]="readonly" type="button" mat-icon-button (click)="deleteImage()">
-            <mat-icon>delete_forever</mat-icon>
+        <button type="button" mat-icon-button (click)="exitFromViewMode()">
+            <mat-icon>close</mat-icon>
         </button>
         <div>
+            <button [disabled]="readonly" type="button" mat-icon-button (click)="deleteImage()">
+                <mat-icon>delete_forever</mat-icon>
+            </button>
             <button [disabled]="readonly" type="button" mat-icon-button (click)="photoInput.click();">
                 <mat-icon>add_a_photo</mat-icon>
             </button>
@@ -41,9 +44,6 @@
                 <mat-icon>redo</mat-icon>
             </button>
         </div>
-        <button type="button" mat-icon-button class="done" (click)="exitFromViewMode()">
-            <mat-icon>done</mat-icon>
-        </button>
     </div>
 </div>
 

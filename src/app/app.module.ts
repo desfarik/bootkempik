@@ -98,7 +98,7 @@ const APP_DATE_FORMATS = {
         MatSnackBarModule,
         RouterModule.forRoot(AppRoutes, {relativeLinkResolution: 'legacy'}),
         ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production,
+            enabled: true,
             registrationStrategy: 'registerImmediately'
         }),
     ],

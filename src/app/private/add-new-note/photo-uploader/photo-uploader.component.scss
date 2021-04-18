@@ -13,6 +13,7 @@
   position: absolute;
   background: white;
 }
+
 .loading.view-mode {
   z-index: 5000;
 }
@@ -54,24 +55,22 @@
   left: 0;
   width: 100%;
   z-index: 2100;
+  top: 0;
+  height: 56px;
+  display: flex;
+  background: #212121;
+  color: white;
 
   .controls-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin: 0 8px;
+    margin-right: 8px;
   }
 
-  &.bottom {
-    bottom: 0;
-    height: 80px;
-    display: flex;
-    background: #f5f5f5;
-    color: rgba(0, 0, 0, .87);
-
-    .done {
-      color: #8bc34a;
-    }
+  ::ng-deep .mat-icon-button[disabled] {
+    color: white !important;
+    opacity: 0.38 !important;
   }
 }

@@ -127,12 +127,7 @@ export class AddNewNoteComponent implements OnInit {
     }
 
     public moveToMainPage() {
-        const from = this.route.snapshot.queryParams.from;
-        if (from) {
-            this.router.navigateByUrl(from);
-        } else {
-            this.router.navigateByUrl('');
-        }
+        history.back();
     }
 }
 

@@ -7,8 +7,8 @@ import {SimpleSnackBar} from '@angular/material/snack-bar/typings/simple-snack-b
 
 const config: MatSnackBarConfig = {
     duration: 3000,
+    horizontalPosition: 'center',
 };
-
 
 @Injectable({
     providedIn: 'root'

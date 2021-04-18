@@ -1,6 +1,6 @@
 {
   "name": "bootkempik",
-  "version": "1.2.1",
+  "version": "1.3.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,6 +10,8 @@
     "realize-new-version": "node ./realize-new-version.js",
     "analyze": "ng build --configuration=production  --statsJson=true && npx webpack-bundle-analyzer ./dist/stats.json",
     "deploy function": "firebase deploy --only functions",
+    "precache": "sw-precache --verbose --config=sw-precache-config.js",
+    "run-precashe": "npm run precache",
     "postinstall": "ngcc",
     "test": "ng test",
     "lint": "ng lint",
