@@ -49,6 +49,9 @@ export class MainComponent implements OnInit {
                 });
         }
         this.loading = false;
+        if (this.isEnabledNotifications === null) {
+            this.enableNotifications();
+        }
     }
 
     public logout() {
@@ -58,23 +61,28 @@ export class MainComponent implements OnInit {
 
     async onToggleChange(event: MatSlideToggleChange) {
         if (event.checked) {
-            if (await this.checkPermission()) {
-                await this.firebaseService.notificationService.enableNotifications();
-                this.isEnabledNotifications = event.checked;
-                this.snackBarService.showSuccess('Уведомления успешно включены', 'OK');
-            } else {
-                this.isEnabledNotifications = true;
-                setTimeout(() => {
-                    this.isEnabledNotifications = false;
-                    localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
-                });
-            }
+            await this.enableNotifications();
         } else {
             await this.firebaseService.notificationService.disableNotifications();
             this.isEnabledNotifications = false;
             this.snackBarService.showInfo('Сейчас бы отключать уведомления...', 'OK');
+            localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
         }
-        localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
+    }
+
+    private async enableNotifications() {
+        if (await this.checkPermission()) {
+            await this.firebaseService.notificationService.enableNotifications();
+            this.isEnabledNotifications = true;
+            this.snackBarService.showSuccess('Уведомления успешно включены', 'OK');
+            localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
+        } else {
+            this.isEnabledNotifications = true;
+            setTimeout(() => {
+                this.isEnabledNotifications = false;
+                localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
+            });
+        }
     }
 
     private async checkPermission(): Promise<boolean> {
