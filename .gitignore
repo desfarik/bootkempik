@@ -29,7 +29,6 @@ speed-measure-plugin*.json
 database.rules.json
 database-debug.log
 firebase.config.ts
-realize-new-version.js
 /src/firebase-messaging-sw.js
 # IDE - VSCode
 .vscode/*

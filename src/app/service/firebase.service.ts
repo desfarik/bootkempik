@@ -19,17 +19,14 @@ import {SnackBarService} from "./snack-bar.service";
 export class FirebaseService {
     public userService: UserService;
     public balanceService: BalanceService;
-    public notificationService: NotificationService;
     private readonly database: firebase.database.Database;
     public onChangeAppVersion = new BehaviorSubject<string>(version);
 
-    constructor(cacheService: CacheService, private apiService: ApiService,
-                snackBarService: SnackBarService) {
+    constructor(cacheService: CacheService, private apiService: ApiService) {
         firebase.initializeApp(firebaseConfig);
         this.database = firebase.database();
         this.userService = new UserService(this.database, apiService);
         this.balanceService = new BalanceService(this.database, cacheService, apiService);
-        this.notificationService = new NotificationService(apiService, firebase.messaging(), snackBarService);
         this.listenAppVersion();
     }
 

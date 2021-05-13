@@ -19,7 +19,7 @@
 
 <mat-menu #menu="matMenu">
     <button mat-menu-item class="notification-menu-item"
-            [disabled]="statusAppService.isErrorMode">
+            [disabled]="true || statusAppService.isErrorMode">
         <mat-slide-toggle
                 (click)="$event.stopImmediatePropagation()"
                 (change)="onToggleChange($event)"

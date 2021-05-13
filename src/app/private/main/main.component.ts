@@ -63,7 +63,7 @@ export class MainComponent implements OnInit {
         if (event.checked) {
             await this.enableNotifications();
         } else {
-            await this.firebaseService.notificationService.disableNotifications();
+            // await this.firebaseService.notificationService.disableNotifications();
             this.isEnabledNotifications = false;
             this.snackBarService.showInfo('Сейчас бы отключать уведомления...', 'OK');
             localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
@@ -72,7 +72,7 @@ export class MainComponent implements OnInit {
 
     private async enableNotifications() {
         if (await this.checkPermission()) {
-            await this.firebaseService.notificationService.enableNotifications();
+            // await this.firebaseService.notificationService.enableNotifications();
             this.isEnabledNotifications = true;
             this.snackBarService.showSuccess('Уведомления успешно включены', 'OK');
             localStorage.setItem(IS_ENABLED_NOTIFICATIONS, `${this.isEnabledNotifications}`);
@@ -88,7 +88,7 @@ export class MainComponent implements OnInit {
     private async checkPermission(): Promise<boolean> {
         if (!('Notification' in window)) {
             this.snackBarService.showError('Ваш браузер не поддерживает уведомления...', 'Okay');
-            this.firebaseService.notificationService.cannotEnableOnOldBrowser();
+            // this.firebaseService.notificationService.cannotEnableOnOldBrowser();
             return false;
         }
         if (Notification.permission === 'granted') {
@@ -96,7 +96,7 @@ export class MainComponent implements OnInit {
         }
         if (Notification.permission === 'denied') {
             this.snackBarService.showInfo('Вы заблокировали уведомления в браузере, разблокируйте их чтобы включить уведомления', 'OК');
-            this.firebaseService.notificationService.tryToEnableBlockedNotification();
+            // this.firebaseService.notificationService.tryToEnableBlockedNotification();
             return Promise.resolve(false);
         }
         return Notification.requestPermission().then((permission) => {
@@ -104,7 +104,7 @@ export class MainComponent implements OnInit {
                 return true;
             }
             this.snackBarService.showError('Я очень огорчен что Вы заблокировали нотификации...', 'Пошел ты');
-            this.firebaseService.notificationService.blockNotification();
+            // this.firebaseService.notificationService.blockNotification();
             return false;
         });
     }
