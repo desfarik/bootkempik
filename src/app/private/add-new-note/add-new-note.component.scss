@@ -170,6 +170,12 @@
   .selected {
     border-color: #673ab7;
   }
+
+  .note-icon-32px.taxi-icon:before {
+    width: 36px;
+    height: 36px;
+    background-size: 36px !important;
+  }
 }
 
 

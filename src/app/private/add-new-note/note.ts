@@ -1,3 +1,5 @@
+import {NoteType} from "../user-notes/note.enum";
+
 export class Note {
     public nowDate: number;
 
@@ -6,7 +8,7 @@ export class Note {
                 public description: string,
                 public moneyPerPerson: MoneyPerPerson,
                 public title: string,
-                public type: string,
+                public type: NoteType,
                 private imageBase64: string,
                 public imageUrl?: string) {
         this.nowDate = new Date().getTime();

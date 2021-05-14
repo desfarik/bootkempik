@@ -7,9 +7,9 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material';
 import {Note} from './note';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MoneySpreaderComponent} from './money-spreader/money-spreader.component';
-import {isAutoNote} from '../user-notes/note.enum';
+import {isAutoNote, NoteType} from '../user-notes/note.enum';
 import {StatusAppService} from '../../service/status-app.service';
-import {PhotoUploaderComponent} from "./photo-uploader/photo-uploader.component";
+import {PhotoUploaderComponent} from './photo-uploader/photo-uploader.component';
 
 @Component({
     selector: 'app-add-new-note',
@@ -34,8 +34,8 @@ export class AddNewNoteComponent implements OnInit {
     public me: User;
     public loading = false;
     public maxDate: Date = new Date();
-    public noteTypes = ['party', 'beer', 'pizza', 'food', 'gift', 'cinema'];
-    public selectedType = this.noteTypes[0];
+    public noteTypes = [NoteType.PARTY, NoteType.BEER, NoteType.TAXI, NoteType.FOOD, NoteType.GIFT, NoteType.CINEMA];
+    public selectedType: NoteType = this.noteTypes[0];
     public readonlyMode = false;
     public isEditableNote = false;
     public owner: User;

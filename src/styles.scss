@@ -156,7 +156,7 @@ mat-tab-body {
   background-size: 36px !important;
 }
 
-.note-icon.note-icon-32px:before {
+.note-icon-32px:before {
   width: 32px;
   height: 32px;
   background-size: 32px !important;
@@ -205,6 +205,11 @@ mat-tab-body {
 .remainder-icon:before {
   @extend .note-icon;
   background: url("assets/remainer.svg");
+}
+
+.taxi-icon:before {
+  @extend .note-icon;
+  background: url("assets/taxi.svg");
 }
 
 input::-webkit-outer-spin-button,

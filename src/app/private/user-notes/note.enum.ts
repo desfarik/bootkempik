@@ -1,10 +1,11 @@
 import {Note} from '../add-new-note/note';
 
-export enum NoteTypes {
+export enum NoteType {
     REMAINDER = 'remainder',
     MUTUAL = 'mutual',
     DEBT = 'debt',
     BEER = 'beer',
+    TAXI = 'taxi',
     PIZZA = 'pizza',
     CINEMA = 'cinema',
     GIFT = 'gift',
@@ -18,9 +19,9 @@ export function isAutoNote(note: Note): boolean {
 
 export function isAutoNoteType(type: string = ''): boolean {
     switch (type) {
-        case  NoteTypes.REMAINDER:
-        case  NoteTypes.MUTUAL:
-        case  NoteTypes.DEBT:
+        case  NoteType.REMAINDER:
+        case  NoteType.MUTUAL:
+        case  NoteType.DEBT:
             return true;
     }
     return false;
