@@ -106,7 +106,11 @@ export class MoneySpreaderComponent implements OnChanges {
     public openDialog() {
         const persons = this.persons.map(person => {
             const user = {...person} as SelectedPerson;
-            user.selected = !!this.selectedPersons.find(sPerson => sPerson.id === person.id);
+            const selectedPerson = this.selectedPersons.find(sPerson => sPerson.id === person.id);
+            user.selected = !!selectedPerson;
+            user.double = selectedPerson?.double;
+            user.manual = selectedPerson?.manual;
+            user.amount = selectedPerson?.amount;
             return user;
         });
         this.dialog.open(SelectParticipantsDialog, {
@@ -164,6 +168,14 @@ export class MoneySpreaderComponent implements OnChanges {
 
         if (calculatedAmount !== Number(this.amount) && differenceCoins > (clearAutoPersonQuantity - 1)) {
             this.amountControl.setErrors({manualAmountError: calculatedAmount.toString()});
+            return;
+        }
+
+        const zeroPerson = this.selectedPersons.find(person => person.amount === 0);
+        if (!!zeroPerson) {
+            this.amountControl.setErrors({zeroPerson: zeroPerson.first_name});
+            this.control.setErrors({amountError: true});
+            this.changeDetector.detectChanges();
             return;
         }
 

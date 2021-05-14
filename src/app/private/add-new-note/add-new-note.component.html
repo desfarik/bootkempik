@@ -59,6 +59,10 @@
                                 *ngIf="addNewNoteForm.controls.amount.hasError('manualAmountError')">
                             Сумма не равна сумме участников: {{addNewNoteForm.controls.amount.errors.manualAmountError}}
                         </mat-error>
+                        <mat-error
+                                *ngIf="addNewNoteForm.controls.amount.hasError('zeroPerson')">
+                            {{addNewNoteForm.controls.amount.errors.zeroPerson}} имеет нулевой долг...
+                        </mat-error>
                         <div matSuffix class="amount-icon">Br</div>
                     </mat-form-field>
 
